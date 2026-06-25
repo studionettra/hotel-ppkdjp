@@ -1,0 +1,132 @@
+<?php
+
+namespace Database\Seeders;
+
+use App\Models\Guest;
+use Illuminate\Database\Seeder;
+
+class GuestSeeder extends Seeder
+{
+    public function run(): void
+    {
+        $guests = [
+            [
+                'full_name'     => 'Budi Santoso',
+                'id_type'       => 'ktp',
+                'id_number'     => '3171234567890001',
+                'phone'         => '081234567890',
+                'email'         => 'budi.santoso@email.com',
+                'address'       => 'Jl. Sudirman No. 45, Jakarta Selatan',
+                'nationality'   => 'Indonesia',
+                'date_of_birth' => '1985-03-15',
+                'gender'        => 'male',
+            ],
+            [
+                'full_name'     => 'Siti Rahayu',
+                'id_type'       => 'ktp',
+                'id_number'     => '3171234567890002',
+                'phone'         => '081234567891',
+                'email'         => 'siti.rahayu@email.com',
+                'address'       => 'Jl. Gatot Subroto No. 12, Jakarta Selatan',
+                'nationality'   => 'Indonesia',
+                'date_of_birth' => '1990-07-22',
+                'gender'        => 'female',
+            ],
+            [
+                'full_name'     => 'Ahmad Hidayat',
+                'id_type'       => 'ktp',
+                'id_number'     => '3271987654320001',
+                'phone'         => '085678901234',
+                'email'         => 'ahmad.hidayat@email.com',
+                'address'       => 'Jl. Diponegoro No. 88, Bandung',
+                'nationality'   => 'Indonesia',
+                'date_of_birth' => '1978-11-03',
+                'gender'        => 'male',
+            ],
+            [
+                'full_name'     => 'John Smith',
+                'id_type'       => 'passport',
+                'id_number'     => 'US9876543210',
+                'phone'         => '+14155551234',
+                'email'         => 'john.smith@email.com',
+                'address'       => '123 Main Street, New York, NY 10001, USA',
+                'nationality'   => 'United States',
+                'date_of_birth' => '1982-06-10',
+                'gender'        => 'male',
+            ],
+            [
+                'full_name'     => 'Tanaka Yuki',
+                'id_type'       => 'passport',
+                'id_number'     => 'JP1234567890',
+                'phone'         => '+81901234567',
+                'email'         => 'yuki.tanaka@email.jp',
+                'address'       => 'Shibuya-ku, Tokyo, Japan',
+                'nationality'   => 'Japan',
+                'date_of_birth' => '1995-01-28',
+                'gender'        => 'female',
+            ],
+            [
+                'full_name'     => 'Dewi Lestari',
+                'id_type'       => 'ktp',
+                'id_number'     => '3371112233440001',
+                'phone'         => '087812345678',
+                'email'         => 'dewi.lestari@email.com',
+                'address'       => 'Jl. Malioboro No. 5, Yogyakarta',
+                'nationality'   => 'Indonesia',
+                'date_of_birth' => '1988-09-14',
+                'gender'        => 'female',
+            ],
+            [
+                'full_name'     => 'Rizky Pratama',
+                'id_type'       => 'sim',
+                'id_number'     => '1234567890123456',
+                'phone'         => '081398765432',
+                'email'         => 'rizky.pratama@email.com',
+                'address'       => 'Jl. Ahmad Yani No. 100, Surabaya',
+                'nationality'   => 'Indonesia',
+                'date_of_birth' => '1992-12-01',
+                'gender'        => 'male',
+            ],
+            [
+                'full_name'     => 'Maria Garcia',
+                'id_type'       => 'passport',
+                'id_number'     => 'ES5432109876',
+                'phone'         => '+34612345678',
+                'email'         => 'maria.garcia@email.es',
+                'address'       => 'Calle Gran Via 25, Madrid, Spain',
+                'nationality'   => 'Spain',
+                'date_of_birth' => '1987-04-19',
+                'gender'        => 'female',
+            ],
+            [
+                'full_name'     => 'Hendra Wijaya',
+                'id_type'       => 'ktp',
+                'id_number'     => '3173456789010001',
+                'phone'         => '082145678901',
+                'email'         => 'hendra.wijaya@email.com',
+                'address'       => 'Jl. Thamrin No. 30, Jakarta Pusat',
+                'nationality'   => 'Indonesia',
+                'date_of_birth' => '1980-08-25',
+                'gender'        => 'male',
+            ],
+            [
+                'full_name'     => 'Nur Aisyah',
+                'id_type'       => 'ktp',
+                'id_number'     => '3571098765430001',
+                'phone'         => '085612349876',
+                'email'         => 'nur.aisyah@email.com',
+                'address'       => 'Jl. Darmo No. 55, Surabaya',
+                'nationality'   => 'Indonesia',
+                'date_of_birth' => '1993-05-07',
+                'gender'        => 'female',
+            ],
+        ];
+
+        foreach ($guests as $guest) {
+            Guest::updateOrCreate(
+                ['id_number' => $guest['id_number']],
+                $guest
+            );
+        }
+    }
+}
