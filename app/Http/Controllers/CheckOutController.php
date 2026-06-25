@@ -81,6 +81,7 @@ class CheckOutController extends Controller
                 'status'      => 'pending',
                 'assigned_to' => null,
                 'notes'       => "Auto-created setelah check-out kamar {$checkIn->room->room_number}",
+                'created_by'  => auth()->id(),
             ]);
         });
 

@@ -23,29 +23,27 @@ export default function AppLayout({ children, title, breadcrumbs = [] }) {
                         <nav className="navbar navbar-expand-lg navbar-light d-none d-xl-flex">
                             <div className="container-fluid">
                                 <div className="ms-auto d-flex align-items-center">
-                                    <div className="dropdown">
-                                        <a
-                                            href="#"
-                                            className="dropdown-toggle d-flex align-items-center text-dark text-decoration-none"
-                                            data-bs-toggle="dropdown"
-                                        >
-                                            <i className="bi bi-person-circle fs-5 me-2"></i>
-                                            <span className="fw-semibold">{auth?.user?.name}</span>
-                                        </a>
-                                        <ul className="dropdown-menu dropdown-menu-end shadow">
-                                            <li>
-                                                <span className="dropdown-item-text text-muted small">
-                                                    {auth?.user?.username}
+                                    <div className="d-flex align-items-center gap-3">
+                                        <div className="d-flex align-items-center bg-white rounded-pill p-1 pe-3 border shadow-sm">
+                                            <span className="badge bg-primary d-flex align-items-center justify-content-center rounded-circle me-2 shadow-sm" style={{ width: '35px', height: '35px' }}>
+                                                <i className="bi bi-person-fill fs-5"></i>
+                                            </span>
+                                            <div className="d-flex flex-column justify-content-center">
+                                                <span className="fw-bold text-dark lh-1" style={{ fontSize: '0.85rem' }}>{auth?.user?.name}</span>
+                                                <span className="badge bg-secondary text-white mt-1 rounded-pill" style={{ fontSize: '0.65rem', width: 'fit-content' }}>
+                                                    {auth?.roles?.[0] ? auth.roles[0].replace(/_/g, ' ').toUpperCase() : 'USER'}
                                                 </span>
-                                            </li>
-                                            <li><hr className="dropdown-divider" /></li>
-                                            <li>
-                                                <a className="dropdown-item text-danger" href="#" onClick={logout}>
-                                                    <i className="bi bi-box-arrow-right me-2"></i>
-                                                    Logout
-                                                </a>
-                                            </li>
-                                        </ul>
+                                            </div>
+                                        </div>
+                                        
+                                        <button 
+                                            onClick={logout}
+                                            className="btn btn-danger btn-sm d-flex align-items-center rounded-pill shadow-sm px-3"
+                                            style={{ height: '40px' }}
+                                        >
+                                            <i className="bi bi-box-arrow-right me-2 fs-6"></i>
+                                            <span className="fw-semibold">Logout</span>
+                                        </button>
                                     </div>
                                 </div>
                             </div>
