@@ -10,7 +10,7 @@ const MENU = [
     },
     {
         label: 'Master Data',
-        icon: 'bi-database-fill',
+        icon: 'bi-stack',
         permission: ['room.view', 'room-type.view'],
         children: [
             { label: 'Lantai', icon: 'bi-layers-fill', route: 'floors.index', permission: 'room.view' },
@@ -30,17 +30,17 @@ const MENU = [
     },
     {
         label: 'Housekeeping',
-        icon: 'bi-stars',
+        icon: 'bi-brush-fill',
         permission: ['housekeeping.view', 'laundry.view', 'pool.view'],
         children: [
-            { label: 'Cleaning Tasks', icon: 'bi-clipboard-check-fill', route: 'housekeeping.tasks.index', permission: 'housekeeping.view' },
+            { label: 'Cleaning Tasks', icon: 'bi-card-checklist', route: 'housekeeping.tasks.index', permission: 'housekeeping.view' },
             { label: 'Laundry', icon: 'bi-basket-fill', route: 'laundry.index', permission: 'laundry.view' },
             { label: 'Pool Maintenance', icon: 'bi-droplet-fill', route: 'pool.index', permission: 'pool.view' },
         ],
     },
     {
         label: 'F&B',
-        icon: 'bi-cup-hot-fill',
+        icon: 'bi-cup-fill',
         permission: ['fnb.view', 'menu.view'],
         children: [
             { label: 'Pesanan', icon: 'bi-receipt-cutoff', route: 'fnb.orders.index', permission: 'fnb.view' },

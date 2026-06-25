@@ -49,7 +49,7 @@ export default function Index({ filters, occupancy, revenue, housekeeping, fnb }
         const form = e.target;
         router.get(route('reports.index'), {
             from: form.from.value,
-            to:   form.to.value,
+            to: form.to.value,
         }, { preserveState: true });
     }
 
