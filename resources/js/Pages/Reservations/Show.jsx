@@ -84,6 +84,11 @@ export default function Show({ reservation }) {
                                     <i className="bi bi-box-arrow-in-right me-2"></i>Proses Check-In
                                 </Link>
                             )}
+                            {reservation.status === 'checked_in' && reservation.check_in && (
+                                <Link href={route('checkouts.create', reservation.check_in.id)} className="btn btn-dark">
+                                    <i className="bi bi-box-arrow-right me-2"></i>Proses Check-Out
+                                </Link>
+                            )}
                             <Link href={route('guests.show', reservation.guest_id)} className="btn btn-info">
                                 <i className="bi bi-person me-2"></i>Lihat Profil Tamu
                             </Link>

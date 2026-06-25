@@ -90,7 +90,16 @@ export default function Index({ rooms, floors, roomTypes }) {
                                             <td>{i + 1}</td>
                                             <td><strong>{room.room_number}</strong></td>
                                             <td>{room.floor?.floor_name || `Lantai ${room.floor?.floor_number}`}</td>
-                                            <td>{room.room_type?.name}</td>
+                                            <td>
+                                                <div className="fw-semibold">{room.room_type?.name}</div>
+                                                {Array.isArray(room.room_type?.facilities) && (
+                                                    <div className="d-flex flex-wrap gap-1 mt-1" style={{ maxWidth: '250px' }}>
+                                                        {room.room_type.facilities.map((f, idx) => (
+                                                            <span key={idx} className="badge bg-light text-dark border" style={{ fontSize: '0.7em' }}>{f}</span>
+                                                        ))}
+                                                    </div>
+                                                )}
+                                            </td>
                                             <td>
                                                 <span className={`badge bg-${STATUS_LABELS[room.status]?.color ?? 'secondary'}`}>
                                                     {STATUS_LABELS[room.status]?.label ?? room.status}

@@ -26,8 +26,6 @@ export default function Show({ guest }) {
                                     <tr><th>Email</th><td>{guest.email || '-'}</td></tr>
                                     <tr><th>Kebangsaan</th><td>{guest.nationality || '-'}</td></tr>
                                     <tr><th>Jenis Kelamin</th><td>{guest.gender === 'male' ? 'Laki-laki' : guest.gender === 'female' ? 'Perempuan' : '-'}</td></tr>
-                                    <tr><th>Tgl. Lahir</th><td>{guest.date_of_birth || '-'}</td></tr>
-                                    <tr><th>Alamat</th><td>{guest.address || '-'}</td></tr>
                                 </tbody>
                             </table>
                         </div>

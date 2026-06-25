@@ -141,8 +141,17 @@ export default function Index({ floors, filters, summary }) {
                                                 <strong className="fs-6">{room.room_number}</strong>
                                             </td>
                                             <td>
-                                                <div>{room.room_type?.name ?? '—'}</div>
-                                                <small className="text-muted">{room.room_type?.code}</small>
+                                                <div>
+                                                    <span className="fw-semibold">{room.room_type?.name ?? '—'}</span>
+                                                    <small className="text-muted ms-2">{room.room_type?.code}</small>
+                                                </div>
+                                                {Array.isArray(room.room_type?.facilities) && (
+                                                    <div className="d-flex flex-wrap gap-1 mt-1" style={{ maxWidth: '250px' }}>
+                                                        {room.room_type.facilities.map((f, idx) => (
+                                                            <span key={idx} className="badge bg-light text-dark border" style={{ fontSize: '0.7em' }}>{f}</span>
+                                                        ))}
+                                                    </div>
+                                                )}
                                             </td>
                                             <td className="text-center">
                                                 <i className="bi bi-person-fill text-muted me-1" />
@@ -214,8 +223,17 @@ export default function Index({ floors, filters, summary }) {
                                             </small>
                                         </td>
                                         <td>
-                                            <div>{room.room_type?.name ?? '—'}</div>
-                                            <small className="text-muted">{room.room_type?.code}</small>
+                                            <div>
+                                                <span className="fw-semibold">{room.room_type?.name ?? '—'}</span>
+                                                <small className="text-muted ms-2">{room.room_type?.code}</small>
+                                            </div>
+                                            {Array.isArray(room.room_type?.facilities) && (
+                                                <div className="d-flex flex-wrap gap-1 mt-1" style={{ maxWidth: '250px' }}>
+                                                    {room.room_type.facilities.map((f, idx) => (
+                                                        <span key={idx} className="badge bg-light text-dark border" style={{ fontSize: '0.7em' }}>{f}</span>
+                                                    ))}
+                                                </div>
+                                            )}
                                         </td>
                                         <td className="text-center">
                                             <i className="bi bi-person-fill text-muted me-1" />

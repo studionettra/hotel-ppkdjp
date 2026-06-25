@@ -50,7 +50,7 @@ class ReservationController extends Controller
 
     public function show(Reservation $reservation)
     {
-        $reservation->load(['guest', 'roomType', 'room', 'createdBy']);
+        $reservation->load(['guest', 'roomType', 'room', 'createdBy', 'checkIn']);
 
         return Inertia::render('Reservations/Show', compact('reservation'));
     }

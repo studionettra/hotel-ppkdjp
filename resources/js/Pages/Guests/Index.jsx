@@ -13,9 +13,7 @@ function GuestModal({ guest, onClose }) {
         id_number: guest?.id_number ?? '',
         phone: guest?.phone ?? '',
         email: guest?.email ?? '',
-        address: guest?.address ?? '',
         nationality: guest?.nationality ?? '',
-        date_of_birth: guest?.date_of_birth ? guest.date_of_birth.substring(0, 10) : '',
         gender: guest?.gender ?? '',
     });
 
@@ -54,37 +52,27 @@ function GuestModal({ guest, onClose }) {
                                         value={data.id_number} onChange={e => setData('id_number', e.target.value)} />
                                     {errors.id_number && <div className="invalid-feedback">{errors.id_number}</div>}
                                 </div>
-                                <div className="col-md-4">
+                                <div className="col-md-6">
                                     <label className="form-label">No. HP</label>
                                     <input type="text" className="form-control" value={data.phone}
                                         onChange={e => setData('phone', e.target.value)} />
                                 </div>
-                                <div className="col-md-4">
+                                <div className="col-md-6">
                                     <label className="form-label">Email</label>
                                     <input type="email" className="form-control" value={data.email}
                                         onChange={e => setData('email', e.target.value)} />
                                 </div>
-                                <div className="col-md-4">
-                                    <label className="form-label">Kewarganegaraan</label>
-                                    <input type="text" className="form-control" value={data.nationality}
-                                        onChange={e => setData('nationality', e.target.value)} />
-                                </div>
-                                <div className="col-md-4">
-                                    <label className="form-label">Tgl. Lahir</label>
-                                    <input type="date" className="form-control" value={data.date_of_birth}
-                                        onChange={e => setData('date_of_birth', e.target.value)} />
-                                </div>
-                                <div className="col-md-4">
+                                <div className="col-md-6">
                                     <label className="form-label">Jenis Kelamin</label>
                                     <select className="form-select" value={data.gender} onChange={e => setData('gender', e.target.value)}>
                                         <option value="">-- Pilih --</option>
                                         {Object.entries(GENDERS).map(([k, v]) => <option key={k} value={k}>{v}</option>)}
                                     </select>
                                 </div>
-                                <div className="col-12">
-                                    <label className="form-label">Alamat</label>
-                                    <textarea className="form-control" rows="2" value={data.address}
-                                        onChange={e => setData('address', e.target.value)} />
+                                <div className="col-md-6">
+                                    <label className="form-label">Kewarganegaraan</label>
+                                    <input type="text" className="form-control" value={data.nationality}
+                                        onChange={e => setData('nationality', e.target.value)} />
                                 </div>
                             </div>
                         </div>
@@ -130,7 +118,7 @@ export default function Index({ guests }) {
                     </div>
                     <table className="table table-striped table-hover">
                         <thead>
-                            <tr><th>#</th><th>Nama</th><th>ID</th><th>No. HP</th><th>Kewarganegaraan</th><th>Reservasi</th><th>Aksi</th></tr>
+                            <tr><th>#</th><th>Nama</th><th>ID</th><th>No. HP</th><th>Kelamin</th><th>Kewarganegaraan</th><th>Reservasi</th><th>Aksi</th></tr>
                         </thead>
                         <tbody>
                             {filtered.length === 0 && (
@@ -144,6 +132,7 @@ export default function Index({ guests }) {
                                     </td>
                                     <td><small>{ID_TYPES[g.id_type]}: {g.id_number}</small></td>
                                     <td>{g.phone || '-'}</td>
+                                    <td>{GENDERS[g.gender] || '-'}</td>
                                     <td>{g.nationality || '-'}</td>
                                     <td><span className="badge bg-light text-dark">{g.reservations_count}</span></td>
                                     <td>
