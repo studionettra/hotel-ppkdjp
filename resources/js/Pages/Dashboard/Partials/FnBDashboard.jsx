@@ -11,7 +11,7 @@ export default function FnBDashboard({ data }) {
                         <div className="card-body px-4 py-4-5">
                             <div className="d-flex align-items-center gap-3">
                                 <div className="stats-icon orange" style={{ backgroundColor: '#fd7e14' }}>
-                                    <i className="bi bi-clock-history"></i>
+                                    <i className="iconly-boldTime-Circle"></i>
                                 </div>
                                 <div>
                                     <h6 className="text-muted font-semibold">Pesanan Aktif</h6>
@@ -26,7 +26,7 @@ export default function FnBDashboard({ data }) {
                         <div className="card-body px-4 py-4-5">
                             <div className="d-flex align-items-center gap-3">
                                 <div className="stats-icon blue">
-                                    <i className="bi bi-door-open-fill"></i>
+                                    <i className="iconly-boldHome"></i>
                                 </div>
                                 <div>
                                     <h6 className="text-muted font-semibold">Layanan Kamar</h6>
@@ -41,7 +41,7 @@ export default function FnBDashboard({ data }) {
                         <div className="card-body px-4 py-4-5">
                             <div className="d-flex align-items-center gap-3">
                                 <div className="stats-icon purple">
-                                    <i className="bi bi-shop"></i>
+                                    <i className="iconly-boldBag"></i>
                                 </div>
                                 <div>
                                     <h6 className="text-muted font-semibold">Pesanan Restoran</h6>
@@ -56,7 +56,7 @@ export default function FnBDashboard({ data }) {
                         <div className="card-body px-4 py-4-5">
                             <div className="d-flex align-items-center gap-3">
                                 <div className="stats-icon green">
-                                    <i className="bi bi-cash-stack"></i>
+                                    <i className="iconly-boldWallet"></i>
                                 </div>
                                 <div>
                                     <h6 className="text-muted font-semibold">Pendapatan Hari Ini</h6>

@@ -1,5 +1,6 @@
 import { router, usePage } from '@inertiajs/react';
 import AppLayout from '@/Layouts/AppLayout';
+import DatePicker from '@/Components/DatePicker';
 
 export default function Index({ logs, users, filters }) {
     function applyFilter(key, value) {
@@ -36,12 +37,12 @@ export default function Index({ logs, users, filters }) {
                             </select>
                         </div>
                         <div className="col-md-2">
-                            <input type="date" className="form-control form-control-sm"
+                            <DatePicker className="form-control form-control-sm"
                                 value={filters.date_from ?? ''} onChange={e => applyFilter('date_from', e.target.value)}
                                 placeholder="Dari tanggal" />
                         </div>
                         <div className="col-md-2">
-                            <input type="date" className="form-control form-control-sm"
+                            <DatePicker className="form-control form-control-sm"
                                 value={filters.date_to ?? ''} onChange={e => applyFilter('date_to', e.target.value)}
                                 placeholder="Sampai tanggal" />
                         </div>

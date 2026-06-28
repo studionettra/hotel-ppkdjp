@@ -23,41 +23,20 @@ class ReservationController extends Controller
         return Inertia::render('Reservations/Index', compact('reservations'));
     }
 
-    public function create()
-    {
-        $guests    = Guest::orderBy('full_name')->get(['id', 'full_name', 'id_number']);
-        $roomTypes = RoomType::orderBy('name')->get(['id', 'name', 'code', 'max_capacity', 'base_price']);
 
-        return Inertia::render('Reservations/Create', compact('guests', 'roomTypes'));
-    }
-
-    public function store(StoreReservationRequest $request)
-    {
-        $data = $request->validated();
-        $data['reservation_code'] = Reservation::generateCode();
-        $data['created_by']       = auth()->id();
-        $data['total_amount']     = $this->service->calculateTotal(
-            $data['room_type_id'],
-            $data['check_in_date'],
-            $data['check_out_date']
-        );
-        $data['status'] = 'confirmed';
-
-        Reservation::create($data);
-
-        return redirect()->route('reservations.index')->with('success', 'Reservasi berhasil dibuat.');
-    }
 
     public function show(Reservation $reservation)
     {
         $reservation->load(['guest', 'roomType', 'room', 'createdBy', 'checkIn']);
+        $menuItems = \App\Models\MenuItem::with('category')->where('is_available', true)->orderBy('name')->get();
 
-        return Inertia::render('Reservations/Show', compact('reservation'));
+        return Inertia::render('Reservations/Show', compact('reservation', 'menuItems'));
     }
 
     public function edit(Reservation $reservation)
     {
-        $guests    = Guest::orderBy('full_name')->get(['id', 'full_name', 'id_number']);
+        $reservation->load('guest');
+        $guests    = Guest::orderBy('full_name')->get();
         $roomTypes = RoomType::orderBy('name')->get(['id', 'name', 'code', 'max_capacity', 'base_price']);
 
         return Inertia::render('Reservations/Edit', compact('reservation', 'guests', 'roomTypes'));
@@ -66,6 +45,21 @@ class ReservationController extends Controller
     public function update(UpdateReservationRequest $request, Reservation $reservation)
     {
         $data = $request->validated();
+        
+        if (empty($data['guest_id'])) {
+            $guest = Guest::updateOrCreate(
+                ['id_number' => $data['guest']['id_number']],
+                $data['guest']
+            );
+            $data['guest_id'] = $guest->id;
+        } elseif (!empty($data['guest'])) {
+            $guest = Guest::find($data['guest_id']);
+            if ($guest) {
+                $guest->update($data['guest']);
+            }
+        }
+        unset($data['guest']);
+
         $data['total_amount'] = $this->service->calculateTotal(
             $data['room_type_id'],
             $data['check_in_date'],

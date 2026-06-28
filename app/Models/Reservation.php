@@ -17,10 +17,16 @@ class Reservation extends Model
     }
 
     protected $fillable = [
-        'reservation_code', 'guest_id', 'room_type_id', 'room_id',
+        'reservation_code', 'booking_id', 'guest_id', 'room_type_id', 'room_id',
         'check_in_date', 'check_out_date', 'adults', 'children',
         'channel', 'status', 'special_request', 'total_amount', 'created_by',
+        'arrival_time', 'payment_method', 'deposit_box_number', 'deposit_box_issued_by', 'deposit_box_date',
     ];
+
+    public function booking()
+    {
+        return $this->belongsTo(Booking::class);
+    }
 
     protected function casts(): array
     {

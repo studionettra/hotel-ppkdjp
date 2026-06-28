@@ -33,6 +33,11 @@ class Room extends Model
         return $this->hasMany(Reservation::class);
     }
 
+    public function checkIns()
+    {
+        return $this->hasMany(CheckIn::class);
+    }
+
     public function housekeepingTasks()
     {
         return $this->hasMany(HousekeepingTask::class);
@@ -51,12 +56,18 @@ class Room extends Model
     public static function statusLabel(): array
     {
         return [
-            'vc'  => 'Vacant Clean',
-            'vd'  => 'Vacant Dirty',
-            'oc'  => 'Occupied Clean',
-            'od'  => 'Occupied Dirty',
-            'ooo' => 'Out of Order',
-            'oos' => 'Out of Service',
+            'vc'    => 'Vacant Clean',
+            'vd'    => 'Vacant Dirty',
+            'vi'    => 'Vacant Inspected',
+            'oc'    => 'Occupied Clean',
+            'od'    => 'Occupied Dirty',
+            'o_dnd' => 'Occupied Do Not Disturb',
+            'oso'   => 'Occupied Sleep Out',
+            'ocg'   => 'On Change',
+            'ooo'   => 'Out of Order',
+            'oos'   => 'Out of Service',
+            'blk'   => 'Blocked',
+            'pu'    => 'Pick Up',
         ];
     }
 }

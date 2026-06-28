@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { useForm, router, Link } from '@inertiajs/react';
 import AppLayout from '@/Layouts/AppLayout';
+import DatePicker from '@/Components/DatePicker';
 
 const ID_TYPES = { ktp: 'KTP', passport: 'Passport', sim: 'SIM' };
 const GENDERS  = { male: 'Laki-laki', female: 'Perempuan' };
@@ -13,8 +14,13 @@ function GuestModal({ guest, onClose }) {
         id_number: guest?.id_number ?? '',
         phone: guest?.phone ?? '',
         email: guest?.email ?? '',
+        address: guest?.address ?? '',
         nationality: guest?.nationality ?? '',
+        date_of_birth: guest?.date_of_birth ? guest.date_of_birth.substring(0, 10) : '',
         gender: guest?.gender ?? '',
+        profession: guest?.profession ?? '',
+        company: guest?.company ?? '',
+        member_card_no: guest?.member_card_no ?? '',
     });
 
     function submit(e) {
@@ -74,6 +80,31 @@ function GuestModal({ guest, onClose }) {
                                     <input type="text" className="form-control" value={data.nationality}
                                         onChange={e => setData('nationality', e.target.value)} />
                                 </div>
+                                <div className="col-md-6">
+                                    <label className="form-label">Tanggal Lahir</label>
+                                    <DatePicker className="form-control" value={data.date_of_birth}
+                                        onChange={e => setData('date_of_birth', e.target.value)} />
+                                </div>
+                                <div className="col-md-6">
+                                    <label className="form-label">Pekerjaan</label>
+                                    <input type="text" className="form-control" value={data.profession}
+                                        onChange={e => setData('profession', e.target.value)} />
+                                </div>
+                                <div className="col-md-6">
+                                    <label className="form-label">Perusahaan</label>
+                                    <input type="text" className="form-control" value={data.company}
+                                        onChange={e => setData('company', e.target.value)} />
+                                </div>
+                                <div className="col-md-6">
+                                    <label className="form-label">No. Member Card</label>
+                                    <input type="text" className="form-control" value={data.member_card_no}
+                                        onChange={e => setData('member_card_no', e.target.value)} />
+                                </div>
+                                <div className="col-12">
+                                    <label className="form-label">Alamat</label>
+                                    <textarea className="form-control" rows="2" value={data.address}
+                                        onChange={e => setData('address', e.target.value)} />
+                                </div>
                             </div>
                         </div>
                         <div className="modal-footer">
@@ -118,7 +149,7 @@ export default function Index({ guests }) {
                     </div>
                     <table className="table table-striped table-hover">
                         <thead>
-                            <tr><th>#</th><th>Nama</th><th>ID</th><th>No. HP</th><th>Kelamin</th><th>Kewarganegaraan</th><th>Reservasi</th><th>Aksi</th></tr>
+                            <tr><th>#</th><th>Nama</th><th>ID</th><th>Perusahaan</th><th>Pekerjaan</th><th>No. HP</th><th>Reservasi</th><th>Aksi</th></tr>
                         </thead>
                         <tbody>
                             {filtered.length === 0 && (
@@ -131,9 +162,9 @@ export default function Index({ guests }) {
                                         <Link href={route('guests.show', g.id)} className="fw-semibold">{g.full_name}</Link>
                                     </td>
                                     <td><small>{ID_TYPES[g.id_type]}: {g.id_number}</small></td>
+                                    <td>{g.company || '-'}</td>
+                                    <td>{g.profession || '-'}</td>
                                     <td>{g.phone || '-'}</td>
-                                    <td>{GENDERS[g.gender] || '-'}</td>
-                                    <td>{g.nationality || '-'}</td>
                                     <td><span className="badge bg-light text-dark">{g.reservations_count}</span></td>
                                     <td>
                                         <button className="btn btn-sm btn-warning me-1" onClick={() => setModal(g)}>

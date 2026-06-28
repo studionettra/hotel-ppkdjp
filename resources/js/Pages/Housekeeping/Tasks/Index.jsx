@@ -17,6 +17,13 @@ const priorityBadge = {
 const taskTypeLabel = {
     cleaning: 'Pembersihan', inspection: 'Inspeksi',
     maintenance: 'Pemeliharaan', deep_clean: 'Deep Clean',
+    extrabed: 'Ekstrabed'
+};
+
+const ROOM_STATUSES = {
+    vc: 'Vacant Clean', vd: 'Vacant Dirty', vi: 'Vacant Inspected', oc: 'Occupied Clean', od: 'Occupied Dirty',
+    o_dnd: 'Occupied DND', oso: 'Occupied Sleep Out', ocg: 'On Change', ooo: 'Out of Order', oos: 'Out of Service',
+    blk: 'Blocked', pu: 'Pick Up'
 };
 
 function CreateModal({ rooms, staffList, onClose }) {
@@ -57,6 +64,7 @@ function CreateModal({ rooms, staffList, onClose }) {
                                         <option value="inspection">Inspeksi</option>
                                         <option value="maintenance">Pemeliharaan</option>
                                         <option value="deep_clean">Deep Clean</option>
+                                        <option value="extrabed">Ekstrabed</option>
                                     </select>
                                 </div>
                             </div>
@@ -175,6 +183,12 @@ export default function Index({ tasks, rooms, staffList, filters }) {
     const { auth } = usePage().props;
     const [showCreate, setShowCreate] = useState(false);
     const [editTask, setEditTask] = useState(null);
+    const [showStatusModal, setShowStatusModal] = useState(false);
+
+    const statusForm = useForm({
+        room_id: '',
+        status: 'vc'
+    });
 
     const canCreate = auth.permissions.includes('housekeeping.create');
     const canUpdate = auth.permissions.includes('housekeeping.update');
@@ -189,19 +203,70 @@ export default function Index({ tasks, rooms, staffList, filters }) {
         router.delete(route('housekeeping.tasks.destroy', id));
     }
 
+    const submitStatus = (e) => {
+        e.preventDefault();
+        statusForm.put(route('rooms.status.update', statusForm.data.room_id), {
+            onSuccess: () => { setShowStatusModal(false); statusForm.reset(); }
+        });
+    };
+
     return (
         <AppLayout title="Tugas Housekeeping">
             {showCreate && <CreateModal rooms={rooms} staffList={staffList} onClose={() => setShowCreate(false)} />}
             {editTask && <UpdateModal task={editTask} staffList={staffList} onClose={() => setEditTask(null)} />}
 
+            {showStatusModal && (
+                <div className="modal show d-block" tabIndex="-1" style={{ background: 'rgba(0,0,0,.5)' }}>
+                    <div className="modal-dialog">
+                        <div className="modal-content">
+                            <form onSubmit={submitStatus}>
+                                <div className="modal-header">
+                                    <h5 className="modal-title">Update Status Kamar Cepat</h5>
+                                    <button type="button" className="btn-close" onClick={() => setShowStatusModal(false)}></button>
+                                </div>
+                                <div className="modal-body">
+                                    <div className="mb-3">
+                                        <label className="form-label">Kamar <span className="text-danger">*</span></label>
+                                        <select className="form-select" required value={statusForm.data.room_id} onChange={e => {
+                                            const roomId = e.target.value;
+                                            statusForm.setData('room_id', roomId);
+                                            const room = rooms.find(r => r.id == roomId);
+                                            if (room) statusForm.setData('status', room.status || 'vc');
+                                        }}>
+                                            <option value="">-- Pilih Kamar --</option>
+                                            {rooms.map(r => <option key={r.id} value={r.id}>{r.room_number}</option>)}
+                                        </select>
+                                    </div>
+                                    <div className="mb-3">
+                                        <label className="form-label">Status Kamar <span className="text-danger">*</span></label>
+                                        <select className="form-select" required value={statusForm.data.status} onChange={e => statusForm.setData('status', e.target.value)}>
+                                            {Object.entries(ROOM_STATUSES).map(([k, v]) => <option key={k} value={k}>{v}</option>)}
+                                        </select>
+                                    </div>
+                                </div>
+                                <div className="modal-footer">
+                                    <button type="button" className="btn btn-secondary" onClick={() => setShowStatusModal(false)}>Batal</button>
+                                    <button type="submit" className="btn btn-primary" disabled={statusForm.processing}>Simpan Status</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            )}
+
             <div className="card">
                 <div className="card-header d-flex justify-content-between align-items-center flex-wrap gap-2">
                     <h4 className="card-title mb-0">Daftar Tugas Housekeeping</h4>
-                    {canCreate && (
-                        <button className="btn btn-primary btn-sm" onClick={() => setShowCreate(true)}>
-                            <i className="bi bi-plus-circle me-1" />Tambah Tugas
+                    <div className="d-flex gap-2">
+                        <button className="btn btn-warning btn-sm text-dark" onClick={() => setShowStatusModal(true)}>
+                            <i className="bi bi-door-open me-1"></i> Update Status Kamar
                         </button>
-                    )}
+                        {canCreate && (
+                            <button className="btn btn-primary btn-sm" onClick={() => setShowCreate(true)}>
+                                <i className="bi bi-plus-circle me-1" />Tambah Tugas
+                            </button>
+                        )}
+                    </div>
                 </div>
                 <div className="card-body border-bottom pb-3">
                     <div className="row g-2">
@@ -230,6 +295,7 @@ export default function Index({ tasks, rooms, staffList, filters }) {
                                 <option value="inspection">Inspeksi</option>
                                 <option value="maintenance">Pemeliharaan</option>
                                 <option value="deep_clean">Deep Clean</option>
+                                <option value="extrabed">Ekstrabed</option>
                             </select>
                         </div>
                         <div className="col-md-3">
@@ -261,7 +327,12 @@ export default function Index({ tasks, rooms, staffList, filters }) {
                             {tasks.data.map(task => (
                                 <tr key={task.id}>
                                     <td><strong>{task.room?.room_number}</strong><br /><small className="text-muted">Lt. {task.room?.floor?.floor_number}</small></td>
-                                    <td>{taskTypeLabel[task.task_type]}</td>
+                                    <td>
+                                        {task.task_type === 'extrabed' 
+                                            ? <span className="badge bg-primary px-2">{taskTypeLabel[task.task_type]}</span>
+                                            : taskTypeLabel[task.task_type]
+                                        }
+                                    </td>
                                     <td><span className={`badge ${priorityBadge[task.priority]}`}>{task.priority}</span></td>
                                     <td><span className={`badge ${statusBadge[task.status]}`}>{task.status}</span></td>
                                     <td>{task.assigned_to ? task.assigned_to?.name : <span className="text-muted">—</span>}</td>

@@ -6,8 +6,8 @@ export default function FODashboard({ data }) {
             {/* Quick Actions */}
             <div className="row mb-4">
                 <div className="col-12 d-flex gap-3">
-                    <Link href={route('reservations.create')} className="btn btn-primary btn-lg">
-                        <i className="bi bi-plus-circle me-2"></i>Reservasi Baru
+                    <Link href={route('availability.index')} className="btn btn-primary btn-lg">
+                        <i className="bi bi-calendar-plus me-2"></i>Buat Reservasi Baru
                     </Link>
                     <Link href={route('reservations.index')} className="btn btn-outline-primary btn-lg">
                         <i className="bi bi-search me-2"></i>Cari Tamu
@@ -22,7 +22,7 @@ export default function FODashboard({ data }) {
                         <div className="card-body px-4 py-4-5">
                             <div className="d-flex align-items-center gap-3">
                                 <div className="stats-icon blue">
-                                    <i className="bi bi-box-arrow-in-right"></i>
+                                    <i className="iconly-boldLogin"></i>
                                 </div>
                                 <div>
                                     <h6 className="text-muted font-semibold">Kedatangan Hari Ini</h6>
@@ -37,7 +37,7 @@ export default function FODashboard({ data }) {
                         <div className="card-body px-4 py-4-5">
                             <div className="d-flex align-items-center gap-3">
                                 <div className="stats-icon green">
-                                    <i className="bi bi-box-arrow-right"></i>
+                                    <i className="iconly-boldLogout"></i>
                                 </div>
                                 <div>
                                     <h6 className="text-muted font-semibold">Keberangkatan Hari Ini</h6>
@@ -52,7 +52,7 @@ export default function FODashboard({ data }) {
                         <div className="card-body px-4 py-4-5">
                             <div className="d-flex align-items-center gap-3">
                                 <div className="stats-icon red">
-                                    <i className="bi bi-door-open"></i>
+                                    <i className="iconly-boldBookmark"></i>
                                 </div>
                                 <div>
                                     <h6 className="text-muted font-semibold">Kamar Tersedia</h6>
@@ -67,7 +67,7 @@ export default function FODashboard({ data }) {
                         <div className="card-body px-4 py-4-5">
                             <div className="d-flex align-items-center gap-3">
                                 <div className="stats-icon purple">
-                                    <i className="bi bi-journals"></i>
+                                    <i className="iconly-boldDocument"></i>
                                 </div>
                                 <div>
                                     <h6 className="text-muted font-semibold">Reservasi Aktif</h6>

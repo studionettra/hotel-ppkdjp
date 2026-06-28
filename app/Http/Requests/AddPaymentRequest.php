@@ -16,8 +16,8 @@ class AddPaymentRequest extends FormRequest
     {
         return [
             'payment_type'   => ['required', Rule::in(['deposit', 'payment', 'refund'])],
-            'payment_method' => ['required', Rule::in(['cash', 'debit_card', 'credit_card', 'transfer', 'city_ledger'])],
-            'amount'         => ['required', 'numeric', 'min:0.01'],
+            'payment_method' => ['required', Rule::in(['Cash', 'Bank Transfer', 'Credit Card', 'E-Wallet', 'cash', 'debit_card', 'credit_card', 'transfer', 'city_ledger'])],
+            'amount'         => ['required', 'numeric', 'min:0'],
             'notes'          => ['nullable', 'string'],
         ];
     }

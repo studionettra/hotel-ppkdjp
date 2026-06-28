@@ -1,5 +1,6 @@
 import { router, usePage } from '@inertiajs/react';
 import AppLayout from '@/Layouts/AppLayout';
+import DatePicker from '@/Components/DatePicker';
 
 const statusLabel = {
     vc: 'Vacant Clean', vd: 'Vacant Dirty', oc: 'Occupied Clean',
@@ -63,11 +64,11 @@ export default function Index({ filters, occupancy, revenue, housekeeping, fnb }
                     <form onSubmit={applyFilter} className="row g-3 align-items-end">
                         <div className="col-md-3">
                             <label className="form-label">Dari Tanggal</label>
-                            <input type="date" name="from" className="form-control" defaultValue={filters.from} />
+                            <DatePicker name="from" className="form-control" defaultValue={filters.from} />
                         </div>
                         <div className="col-md-3">
                             <label className="form-label">Sampai Tanggal</label>
-                            <input type="date" name="to" className="form-control" defaultValue={filters.to} />
+                            <DatePicker name="to" className="form-control" defaultValue={filters.to} />
                         </div>
                         <div className="col-md-2">
                             <button type="submit" className="btn btn-primary w-100">

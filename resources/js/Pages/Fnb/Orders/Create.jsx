@@ -9,10 +9,14 @@ export default function Create({ menuItems, rooms, guests }) {
     const [qty, setQty] = useState(1);
     const [itemNote, setItemNote] = useState('');
 
+    const urlParams = typeof window !== 'undefined' ? new URLSearchParams(window.location.search) : new URLSearchParams();
+    const initialGuestId = urlParams.get('guest_id') || '';
+    const initialRoomId = urlParams.get('room_id') || '';
+
     const { data, setData, post, processing, errors } = useForm({
-        order_type:   'dine_in',
-        guest_id:     '',
-        room_id:      '',
+        order_type:   initialRoomId ? 'room_service' : 'dine_in',
+        guest_id:     initialGuestId,
+        room_id:      initialRoomId,
         table_number: '',
         notes:        '',
         items:        [],

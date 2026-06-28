@@ -9,7 +9,7 @@ export default function HKDashboard({ data }) {
                         <div className="card-body px-4 py-4-5">
                             <div className="d-flex align-items-center gap-3">
                                 <div className="stats-icon yellow" style={{ backgroundColor: '#ffc107' }}>
-                                    <i className="bi bi-broom"></i>
+                                    <i className="iconly-boldScan"></i>
                                 </div>
                                 <div>
                                     <h6 className="text-muted font-semibold">Kamar Kosong Kotor</h6>
@@ -24,7 +24,7 @@ export default function HKDashboard({ data }) {
                         <div className="card-body px-4 py-4-5">
                             <div className="d-flex align-items-center gap-3">
                                 <div className="stats-icon orange" style={{ backgroundColor: '#fd7e14' }}>
-                                    <i className="bi bi-person-x"></i>
+                                    <i className="iconly-boldProfile"></i>
                                 </div>
                                 <div>
                                     <h6 className="text-muted font-semibold">Kamar Terisi Kotor</h6>
@@ -39,7 +39,7 @@ export default function HKDashboard({ data }) {
                         <div className="card-body px-4 py-4-5">
                             <div className="d-flex align-items-center gap-3">
                                 <div className="stats-icon blue">
-                                    <i className="bi bi-basket-fill"></i>
+                                    <i className="iconly-boldBag"></i>
                                 </div>
                                 <div>
                                     <h6 className="text-muted font-semibold">Laundry Tertunda</h6>
@@ -54,7 +54,7 @@ export default function HKDashboard({ data }) {
                         <div className="card-body px-4 py-4-5">
                             <div className="d-flex align-items-center gap-3">
                                 <div className="stats-icon purple">
-                                    <i className="bi bi-card-checklist"></i>
+                                    <i className="iconly-boldDocument"></i>
                                 </div>
                                 <div>
                                     <h6 className="text-muted font-semibold">Tugas Pembersihan</h6>
@@ -69,7 +69,7 @@ export default function HKDashboard({ data }) {
                         <div className="card-body px-4 py-4-5">
                             <div className="d-flex align-items-center gap-3">
                                 <div className="stats-icon info" style={{ backgroundColor: '#0dcaf0' }}>
-                                    <i className="bi bi-droplet-fill text-white"></i>
+                                    <i className="iconly-boldDiscovery text-white"></i>
                                 </div>
                                 <div>
                                     <h6 className="text-muted font-semibold">Jadwal Perawatan Kolam</h6>

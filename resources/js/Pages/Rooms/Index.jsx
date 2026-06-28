@@ -3,12 +3,18 @@ import { useForm, router } from '@inertiajs/react';
 import AppLayout from '@/Layouts/AppLayout';
 
 const STATUS_LABELS = {
-    vc: { label: 'Vacant Clean', color: 'success' },
-    vd: { label: 'Vacant Dirty', color: 'warning' },
-    oc: { label: 'Occupied Clean', color: 'primary' },
-    od: { label: 'Occupied Dirty', color: 'danger' },
-    ooo: { label: 'Out of Order', color: 'danger' },
-    oos: { label: 'Out of Service', color: 'secondary' },
+    vc:    { label: 'Vacant Clean', color: 'success' },
+    vd:    { label: 'Vacant Dirty', color: 'warning text-dark' },
+    vi:    { label: 'Vacant Inspected', color: 'info text-dark' },
+    oc:    { label: 'Occupied Clean', color: 'primary' },
+    od:    { label: 'Occupied Dirty', color: 'danger' },
+    o_dnd: { label: 'Occupied DND', color: 'dark' },
+    oso:   { label: 'Occupied Sleep Out', color: 'secondary' },
+    ocg:   { label: 'On Change', color: 'info text-dark' },
+    ooo:   { label: 'Out of Order', color: 'danger' },
+    oos:   { label: 'Out of Service', color: 'secondary' },
+    blk:   { label: 'Blocked', color: 'dark' },
+    pu:    { label: 'Pick Up', color: 'warning text-dark' },
 };
 
 export default function Index({ rooms, floors, roomTypes }) {

@@ -20,6 +20,9 @@ class GuestSeeder extends Seeder
                 'nationality'   => 'Indonesia',
                 'date_of_birth' => '1985-03-15',
                 'gender'        => 'male',
+                'profession'    => 'Pengusaha',
+                'company'       => 'PT. Maju Jaya',
+                'member_card_no'=> 'MBR-001',
             ],
             [
                 'full_name'     => 'Siti Rahayu',
@@ -31,6 +34,9 @@ class GuestSeeder extends Seeder
                 'nationality'   => 'Indonesia',
                 'date_of_birth' => '1990-07-22',
                 'gender'        => 'female',
+                'profession'    => 'Pegawai Negeri',
+                'company'       => 'Kementerian Keuangan',
+                'member_card_no'=> 'MBR-002',
             ],
             [
                 'full_name'     => 'Ahmad Hidayat',
@@ -42,6 +48,9 @@ class GuestSeeder extends Seeder
                 'nationality'   => 'Indonesia',
                 'date_of_birth' => '1978-11-03',
                 'gender'        => 'male',
+                'profession'    => 'Dosen',
+                'company'       => 'Universitas Indonesia',
+                'member_card_no'=> null,
             ],
             [
                 'full_name'     => 'John Smith',
@@ -53,6 +62,9 @@ class GuestSeeder extends Seeder
                 'nationality'   => 'United States',
                 'date_of_birth' => '1982-06-10',
                 'gender'        => 'male',
+                'profession'    => 'Software Engineer',
+                'company'       => 'Google LLC',
+                'member_card_no'=> null,
             ],
             [
                 'full_name'     => 'Tanaka Yuki',
@@ -64,6 +76,9 @@ class GuestSeeder extends Seeder
                 'nationality'   => 'Japan',
                 'date_of_birth' => '1995-01-28',
                 'gender'        => 'female',
+                'profession'    => 'Designer',
+                'company'       => 'Sony',
+                'member_card_no'=> 'MBR-005',
             ],
             [
                 'full_name'     => 'Dewi Lestari',
@@ -75,6 +90,9 @@ class GuestSeeder extends Seeder
                 'nationality'   => 'Indonesia',
                 'date_of_birth' => '1988-09-14',
                 'gender'        => 'female',
+                'profession'    => 'Penulis',
+                'company'       => 'Freelance',
+                'member_card_no'=> null,
             ],
             [
                 'full_name'     => 'Rizky Pratama',
@@ -86,6 +104,9 @@ class GuestSeeder extends Seeder
                 'nationality'   => 'Indonesia',
                 'date_of_birth' => '1992-12-01',
                 'gender'        => 'male',
+                'profession'    => 'Arsitek',
+                'company'       => 'Studio Bintang',
+                'member_card_no'=> 'MBR-007',
             ],
             [
                 'full_name'     => 'Maria Garcia',
@@ -97,6 +118,9 @@ class GuestSeeder extends Seeder
                 'nationality'   => 'Spain',
                 'date_of_birth' => '1987-04-19',
                 'gender'        => 'female',
+                'profession'    => 'Consultant',
+                'company'       => 'Accenture',
+                'member_card_no'=> null,
             ],
             [
                 'full_name'     => 'Hendra Wijaya',
@@ -108,6 +132,9 @@ class GuestSeeder extends Seeder
                 'nationality'   => 'Indonesia',
                 'date_of_birth' => '1980-08-25',
                 'gender'        => 'male',
+                'profession'    => 'Direktur',
+                'company'       => 'PT. Bank Mandiri',
+                'member_card_no'=> 'MBR-009',
             ],
             [
                 'full_name'     => 'Nur Aisyah',
@@ -119,6 +146,9 @@ class GuestSeeder extends Seeder
                 'nationality'   => 'Indonesia',
                 'date_of_birth' => '1993-05-07',
                 'gender'        => 'female',
+                'profession'    => 'Dokter',
+                'company'       => 'RS Siloam',
+                'member_card_no'=> 'MBR-010',
             ],
         ];
 

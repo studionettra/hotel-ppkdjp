@@ -60,7 +60,17 @@ class LaundryController extends Controller
             $validated['delivered_at'] = now();
         }
 
+        $oldStatus = $laundryItem->status;
         $laundryItem->update($validated);
+
+        if ($oldStatus !== 'delivered' && $validated['status'] === 'delivered') {
+            if ($laundryItem->createdBy) {
+                $laundryItem->createdBy->notify(new \App\Notifications\LaundryOrderCompleted($laundryItem));
+            } else {
+                $foUsers = \App\Models\User::permission('front_office.view')->get();
+                \Illuminate\Support\Facades\Notification::send($foUsers, new \App\Notifications\LaundryOrderCompleted($laundryItem));
+            }
+        }
 
         return back()->with('success', 'Status laundry diperbarui.');
     }

@@ -29,7 +29,7 @@ export default function AdminDashboard({ data }) {
                         <div className="card-body px-4 py-4-5">
                             <div className="d-flex align-items-center gap-3">
                                 <div className="stats-icon purple">
-                                    <i className="bi bi-house-door"></i>
+                                    <i className="iconly-boldHome"></i>
                                 </div>
                                 <div>
                                     <h6 className="text-muted font-semibold">Tingkat Hunian</h6>
@@ -44,7 +44,7 @@ export default function AdminDashboard({ data }) {
                         <div className="card-body px-4 py-4-5">
                             <div className="d-flex align-items-center gap-3">
                                 <div className="stats-icon blue">
-                                    <i className="bi bi-cash-stack"></i>
+                                    <i className="iconly-boldWallet"></i>
                                 </div>
                                 <div>
                                     <h6 className="text-muted font-semibold">Pendapatan Hari Ini</h6>
@@ -59,7 +59,7 @@ export default function AdminDashboard({ data }) {
                         <div className="card-body px-4 py-4-5">
                             <div className="d-flex align-items-center gap-3">
                                 <div className="stats-icon green">
-                                    <i className="bi bi-people-fill"></i>
+                                    <i className="iconly-boldProfile"></i>
                                 </div>
                                 <div>
                                     <h6 className="text-muted font-semibold">Tamu Aktif</h6>
@@ -74,7 +74,7 @@ export default function AdminDashboard({ data }) {
                         <div className="card-body px-4 py-4-5">
                             <div className="d-flex align-items-center gap-3">
                                 <div className="stats-icon blue">
-                                    <i className="bi bi-door-open"></i>
+                                    <i className="iconly-boldBookmark"></i>
                                 </div>
                                 <div>
                                     <h6 className="text-muted font-semibold">Kamar Tersedia (VC)</h6>
@@ -89,7 +89,7 @@ export default function AdminDashboard({ data }) {
                         <div className="card-body px-4 py-4-5">
                             <div className="d-flex align-items-center gap-3">
                                 <div className="stats-icon purple">
-                                    <i className="bi bi-calendar-check"></i>
+                                    <i className="iconly-boldCalendar"></i>
                                 </div>
                                 <div>
                                     <h6 className="text-muted font-semibold">Reservasi Baru</h6>
@@ -104,7 +104,7 @@ export default function AdminDashboard({ data }) {
                         <div className="card-body px-4 py-4-5">
                             <div className="d-flex align-items-center gap-3">
                                 <div className="stats-icon red">
-                                    <i className="bi bi-tools"></i>
+                                    <i className="iconly-boldSetting"></i>
                                 </div>
                                 <div>
                                     <h6 className="text-muted font-semibold">Kamar OOO / OOS</h6>

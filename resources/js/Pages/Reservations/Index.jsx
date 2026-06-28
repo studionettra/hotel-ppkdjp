@@ -41,8 +41,8 @@ export default function Index({ reservations }) {
             <div className="card">
                 <div className="card-header d-flex justify-content-between align-items-center">
                     <h4 className="card-title mb-0">Daftar Reservasi</h4>
-                    <Link href={route('reservations.create')} className="btn btn-primary btn-sm">
-                        <i className="bi bi-plus-lg me-1"></i> Buat Reservasi
+                    <Link href={route('availability.index')} className="btn btn-primary btn-sm">
+                        <i className="bi bi-plus-lg me-1"></i> Buat Reservasi Baru
                     </Link>
                 </div>
                 <div className="card-body">
@@ -57,17 +57,18 @@ export default function Index({ reservations }) {
                     </div>
                     <table className="table table-striped table-hover">
                         <thead>
-                            <tr><th>Kode</th><th>Tamu</th><th>Tipe Kamar</th><th>Check In</th><th>Check Out</th><th>Tamu</th><th>Status</th><th>Aksi</th></tr>
+                            <tr><th>Kode</th><th>Tamu</th><th>Tipe Kamar</th><th>No. Kamar</th><th>Check In</th><th>Check Out</th><th>Tamu</th><th>Status</th><th>Aksi</th></tr>
                         </thead>
                         <tbody>
                             {filtered.length === 0 && (
-                                <tr><td colSpan={8} className="text-center text-muted">Tidak ada data reservasi.</td></tr>
+                                <tr><td colSpan={9} className="text-center text-muted">Tidak ada data reservasi.</td></tr>
                             )}
                             {filtered.map(r => (
                                 <tr key={r.id}>
                                     <td><Link href={route('reservations.show', r.id)} className="fw-semibold">{r.reservation_code}</Link></td>
                                     <td>{r.guest?.full_name}</td>
                                     <td>{r.room_type?.name}</td>
+                                    <td>{r.room?.room_number ?? '-'}</td>
                                     <td>{formatTanggal(r.check_in_date)}</td>
                                     <td>{formatTanggal(r.check_out_date)}</td>
                                     <td>{r.adults + r.children}</td>

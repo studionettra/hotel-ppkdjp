@@ -19,6 +19,7 @@ class Guest extends Model
     protected $fillable = [
         'full_name', 'id_type', 'id_number', 'phone', 'email',
         'address', 'nationality', 'date_of_birth', 'gender',
+        'profession', 'company', 'member_card_no',
     ];
 
     protected function casts(): array

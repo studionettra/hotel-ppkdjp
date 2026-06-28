@@ -24,6 +24,9 @@ class StoreGuestRequest extends FormRequest
             'nationality'  => ['nullable', 'string', 'max:100'],
             'date_of_birth'=> ['nullable', 'date'],
             'gender'       => ['nullable', Rule::in(['male', 'female'])],
+            'profession'   => ['nullable', 'string'],
+            'company'      => ['nullable', 'string'],
+            'member_card_no'=> ['nullable', 'string'],
         ];
     }
 }

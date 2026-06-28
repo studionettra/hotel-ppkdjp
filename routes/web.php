@@ -26,6 +26,11 @@ require __DIR__.'/auth.php';
 Route::middleware(['auth'])->group(function () {
     Route::get('/', fn () => redirect()->route('dashboard'));
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
+    Route::get('/notifications/{id}/read', function (string $id) {
+        $notification = auth()->user()->notifications()->findOrFail($id);
+        $notification->markAsRead();
+        return redirect($notification->data['url'] ?? url('/'));
+    })->name('notifications.read');
 
     // User Management
     Route::middleware('permission:user.view')->group(function () {
@@ -87,13 +92,22 @@ Route::middleware(['auth'])->group(function () {
             ->middleware('permission:guest.delete')->name('guests.destroy');
     });
 
+    // Booking / Check-in Management
+    Route::middleware('permission:reservation.create')->group(function () {
+        Route::get('/bookings/checkin', function() {
+            return redirect()->route('availability.index')->with('error', 'Sesi registrasi tidak valid atau telah berakhir. Silakan pilih kamar kembali.');
+        })->name('bookings.checkin.get');
+        Route::post('/bookings/checkin', [\App\Http\Controllers\BookingController::class, 'checkinForm'])->name('bookings.checkin');
+        Route::get('/bookings', function() {
+            return redirect()->route('availability.index')->with('error', 'Sesi tidak valid.');
+        })->name('bookings.fallback');
+        Route::post('/bookings', [\App\Http\Controllers\BookingController::class, 'store'])->name('bookings.store');
+        Route::get('/bookings/{booking}/confirmed', [\App\Http\Controllers\BookingController::class, 'confirmed'])->name('bookings.confirmed');
+    });
+
     // Reservation Management
     Route::middleware('permission:reservation.view')->group(function () {
         Route::get('/reservations', [ReservationController::class, 'index'])->name('reservations.index');
-        Route::get('/reservations/create', [ReservationController::class, 'create'])
-            ->middleware('permission:reservation.create')->name('reservations.create');
-        Route::post('/reservations', [ReservationController::class, 'store'])
-            ->middleware('permission:reservation.create')->name('reservations.store');
         Route::get('/reservations/{reservation}', [ReservationController::class, 'show'])->name('reservations.show');
         Route::get('/reservations/{reservation}/edit', [ReservationController::class, 'edit'])
             ->middleware('permission:reservation.update')->name('reservations.edit');
@@ -101,6 +115,13 @@ Route::middleware(['auth'])->group(function () {
             ->middleware('permission:reservation.update')->name('reservations.update');
         Route::patch('/reservations/{reservation}/cancel', [ReservationController::class, 'cancel'])
             ->middleware('permission:reservation.cancel')->name('reservations.cancel');
+    });
+
+    // Front Office Services
+    Route::middleware('permission:reservation.update')->group(function () {
+        Route::post('/fo/services/extrabed/{reservation}', [\App\Http\Controllers\FrontOfficeServiceController::class, 'orderExtrabed'])->name('fo.services.extrabed');
+        Route::post('/fo/services/fnb/{reservation}', [\App\Http\Controllers\FrontOfficeServiceController::class, 'orderFnb'])->name('fo.services.fnb');
+        Route::post('/fo/services/laundry/{reservation}', [\App\Http\Controllers\FrontOfficeServiceController::class, 'orderLaundry'])->name('fo.services.laundry');
     });
 
     // Availability Calendar
@@ -126,6 +147,7 @@ Route::middleware(['auth'])->group(function () {
     Route::middleware('permission:checkout.create')->group(function () {
         Route::get('/checkouts/create/{checkin}', [CheckOutController::class, 'create'])->name('checkouts.create');
         Route::post('/checkouts', [CheckOutController::class, 'store'])->name('checkouts.store');
+        Route::post('/checkouts/{checkin}/request-inspection', [CheckOutController::class, 'requestInspection'])->name('checkouts.request-inspection');
     });
 
     // Guest Folio & Payment
@@ -141,6 +163,9 @@ Route::middleware(['auth'])->group(function () {
 
     // Housekeeping Tasks
     Route::middleware('permission:housekeeping.view')->group(function () {
+        // Room Status Update
+        Route::put('/rooms/{room}/status', [\App\Http\Controllers\RoomStatusController::class, 'update'])->name('rooms.status.update');
+
         Route::get('/housekeeping/tasks', [HousekeepingTaskController::class, 'index'])->name('housekeeping.tasks.index');
         Route::post('/housekeeping/tasks', [HousekeepingTaskController::class, 'store'])
             ->middleware('permission:housekeeping.create')->name('housekeeping.tasks.store');
@@ -148,6 +173,24 @@ Route::middleware(['auth'])->group(function () {
             ->middleware('permission:housekeeping.update')->name('housekeeping.tasks.update');
         Route::delete('/housekeeping/tasks/{housekeepingTask}', [HousekeepingTaskController::class, 'destroy'])
             ->middleware('permission:housekeeping.delete')->name('housekeeping.tasks.destroy');
+
+        // Lost and Found
+        Route::get('/housekeeping/lost-and-found', [\App\Http\Controllers\LostAndFoundController::class, 'index'])->name('housekeeping.lost-and-found.index');
+        Route::post('/housekeeping/lost-and-found', [\App\Http\Controllers\LostAndFoundController::class, 'store'])->name('housekeeping.lost-and-found.store');
+        Route::put('/housekeeping/lost-and-found/{lostAndFound}', [\App\Http\Controllers\LostAndFoundController::class, 'update'])->name('housekeeping.lost-and-found.update');
+
+        // Guest Loans
+        Route::get('/housekeeping/guest-loans', [\App\Http\Controllers\GuestLoanController::class, 'index'])->name('housekeeping.guest-loans.index');
+        Route::post('/housekeeping/guest-loans', [\App\Http\Controllers\GuestLoanController::class, 'store'])->name('housekeeping.guest-loans.store');
+        Route::put('/housekeeping/guest-loans/{guestLoan}', [\App\Http\Controllers\GuestLoanController::class, 'update'])->name('housekeeping.guest-loans.update');
+
+        // Control Sheets
+        Route::get('/housekeeping/control-sheets', [\App\Http\Controllers\HousekeepingControlSheetController::class, 'index'])->name('housekeeping.control-sheets.index');
+        Route::post('/housekeeping/control-sheets', [\App\Http\Controllers\HousekeepingControlSheetController::class, 'store'])->name('housekeeping.control-sheets.store');
+        
+        // Housekeeping Charges
+        Route::get('/housekeeping/charges', [\App\Http\Controllers\HousekeepingChargeController::class, 'index'])->name('housekeeping.charges.index');
+        Route::post('/housekeeping/charges', [\App\Http\Controllers\HousekeepingChargeController::class, 'store'])->name('housekeeping.charges.store');
     });
 
     // Laundry

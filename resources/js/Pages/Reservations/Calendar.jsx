@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import axios from 'axios';
 import AppLayout from '@/Layouts/AppLayout';
+import DatePicker from '@/Components/DatePicker';
 
 export default function Calendar({ roomTypes }) {
     const [checkIn, setCheckIn]   = useState('');
@@ -39,12 +40,12 @@ export default function Calendar({ roomTypes }) {
                             <form onSubmit={search} className="row g-3 align-items-end">
                                 <div className="col-md-4">
                                     <label className="form-label">Check In</label>
-                                    <input type="date" className="form-control" value={checkIn}
+                                    <DatePicker className="form-control" value={checkIn}
                                         onChange={e => setCheckIn(e.target.value)} required />
                                 </div>
                                 <div className="col-md-4">
                                     <label className="form-label">Check Out</label>
-                                    <input type="date" className="form-control" value={checkOut}
+                                    <DatePicker className="form-control" value={checkOut}
                                         onChange={e => setCheckOut(e.target.value)} required />
                                 </div>
                                 <div className="col-md-4">
@@ -83,7 +84,7 @@ export default function Calendar({ roomTypes }) {
                                                             </div>
                                                         </div>
                                                         {rt.available > 0 && (
-                                                            <a href={route('reservations.create')} className="btn btn-sm btn-success mt-3 w-100">
+                                                            <a href={route('availability.index')} className="btn btn-sm btn-success mt-3 w-100">
                                                                 Buat Reservasi
                                                             </a>
                                                         )}

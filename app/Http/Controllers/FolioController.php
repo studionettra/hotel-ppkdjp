@@ -30,6 +30,7 @@ class FolioController extends Controller
         return back()->with('success', 'Charge berhasil ditambahkan.');
     }
 
+
     public function addPayment(AddPaymentRequest $request, GuestFolio $folio)
     {
         Payment::create([

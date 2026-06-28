@@ -15,7 +15,7 @@ class CheckOutController extends Controller
 {
     public function create(CheckIn $checkin)
     {
-        $checkin->load(['reservation.guest', 'reservation.roomType', 'room', 'guestFolio.charges', 'guestFolio.payments']);
+        $checkin->load(['reservation.guest', 'reservation.roomType', 'room', 'room.housekeepingTasks', 'guestFolio.charges', 'guestFolio.payments']);
 
         abort_if(! $checkin->guestFolio, 404, 'Folio tidak ditemukan.');
 
@@ -86,5 +86,24 @@ class CheckOutController extends Controller
         });
 
         return redirect()->route('reservations.index')->with('success', 'Check-Out berhasil diproses.');
+    }
+
+    public function requestInspection(CheckIn $checkin)
+    {
+        $checkin->load('room');
+        
+        $task = HousekeepingTask::create([
+            'room_id'     => $checkin->room_id,
+            'task_type'   => 'inspection',
+            'priority'    => 'high',
+            'status'      => 'pending',
+            'notes'       => "Mohon cek amenitas, minibar, atau kerusakan karena tamu kamar {$checkin->room->room_number} akan check-out.",
+            'created_by'  => auth()->id(),
+        ]);
+
+        $users = \App\Models\User::permission('housekeeping.view')->get();
+        \Illuminate\Support\Facades\Notification::send($users, new \App\Notifications\HousekeepingTaskRequested($task));
+
+        return back()->with('success', 'Permintaan inspeksi kamar telah dikirim ke Housekeeping.');
     }
 }

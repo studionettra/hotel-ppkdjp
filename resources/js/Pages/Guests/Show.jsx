@@ -25,7 +25,12 @@ export default function Show({ guest }) {
                                     <tr><th>No. HP</th><td>{guest.phone || '-'}</td></tr>
                                     <tr><th>Email</th><td>{guest.email || '-'}</td></tr>
                                     <tr><th>Kebangsaan</th><td>{guest.nationality || '-'}</td></tr>
+                                    <tr><th>Tgl Lahir</th><td>{guest.date_of_birth || '-'}</td></tr>
                                     <tr><th>Jenis Kelamin</th><td>{guest.gender === 'male' ? 'Laki-laki' : guest.gender === 'female' ? 'Perempuan' : '-'}</td></tr>
+                                    <tr><th>Pekerjaan</th><td>{guest.profession || '-'}</td></tr>
+                                    <tr><th>Perusahaan</th><td>{guest.company || '-'}</td></tr>
+                                    <tr><th>No. Member</th><td>{guest.member_card_no || '-'}</td></tr>
+                                    <tr><th>Alamat</th><td>{guest.address || '-'}</td></tr>
                                 </tbody>
                             </table>
                         </div>

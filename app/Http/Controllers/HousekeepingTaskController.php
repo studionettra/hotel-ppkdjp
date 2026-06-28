@@ -39,11 +39,14 @@ class HousekeepingTaskController extends Controller
             'notes'       => ['nullable', 'string'],
         ]);
 
-        HousekeepingTask::create([
+        $task = HousekeepingTask::create([
             ...$validated,
             'status'     => 'pending',
             'created_by' => Auth::id(),
         ]);
+
+        $users = User::permission('housekeeping.view')->get();
+        \Illuminate\Support\Facades\Notification::send($users, new \App\Notifications\HousekeepingTaskRequested($task));
 
         return back()->with('success', 'Tugas housekeeping berhasil dibuat.');
     }
@@ -65,7 +68,17 @@ class HousekeepingTaskController extends Controller
             $validated['completed_at'] = $now;
         }
 
+        $oldStatus = $housekeepingTask->status;
         $housekeepingTask->update($validated);
+
+        if ($oldStatus !== 'completed' && $validated['status'] === 'completed') {
+            if ($housekeepingTask->createdBy) {
+                $housekeepingTask->createdBy->notify(new \App\Notifications\HousekeepingTaskCompleted($housekeepingTask));
+            } else {
+                $foUsers = \App\Models\User::permission('front_office.view')->get();
+                \Illuminate\Support\Facades\Notification::send($foUsers, new \App\Notifications\HousekeepingTaskCompleted($housekeepingTask));
+            }
+        }
 
         return back()->with('success', 'Tugas berhasil diperbarui.');
     }

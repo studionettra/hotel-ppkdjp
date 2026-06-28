@@ -79,6 +79,11 @@ class FnbOrderController extends Controller
             }
 
             $order->recalculate();
+
+            if (!Auth::user()->hasRole('F&B Service') && !Auth::user()->hasRole('Administrator')) {
+                $fnbUsers = \App\Models\User::permission('fnb.view')->get();
+                \Illuminate\Support\Facades\Notification::send($fnbUsers, new \App\Notifications\FnbOrderRequested($order));
+            }
         });
 
         return redirect()->route('fnb.orders.index')->with('success', 'Pesanan berhasil dibuat.');
@@ -102,7 +107,14 @@ class FnbOrderController extends Controller
             $validated['paid_at'] = now();
         }
 
+        $oldStatus = $fnbOrder->status;
         $fnbOrder->update($validated);
+
+        if ($oldStatus !== $validated['status'] && in_array($validated['status'], ['served', 'completed'])) {
+            if ($fnbOrder->createdBy) {
+                $fnbOrder->createdBy->notify(new \App\Notifications\FnbOrderCompleted($fnbOrder));
+            }
+        }
 
         return back()->with('success', 'Status pesanan diperbarui.');
     }

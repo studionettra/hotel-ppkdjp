@@ -167,8 +167,8 @@ export default function Show({ order }) {
                                 <tbody>
                                     {order.items?.map(item => (
                                         <tr key={item.id}>
-                                            <td><strong>{item.menu_item?.name}</strong></td>
-                                            <td><small className="text-muted">{item.menu_item?.category?.name}</small></td>
+                                            <td><strong>{item.menu_item?.name || item.item_name || 'Item Kustom'}</strong></td>
+                                            <td><small className="text-muted">{item.menu_item?.category?.name || 'FO Service'}</small></td>
                                             <td className="text-center">{item.quantity}</td>
                                             <td className="text-end">Rp {Number(item.unit_price).toLocaleString('id-ID')}</td>
                                             <td className="text-end">Rp {Number(item.subtotal).toLocaleString('id-ID')}</td>
