@@ -3,11 +3,11 @@ import { useForm, usePage, router } from '@inertiajs/react';
 import AppLayout from '@/Layouts/AppLayout';
 
 const statusBadge = {
-    received:   'bg-info text-dark',
-    processing: 'bg-primary',
-    ready:      'bg-warning text-dark',
-    delivered:  'bg-success',
-    cancelled:  'bg-secondary',
+    received:   'bg-info-subtle text-info border border-info-subtle',
+    processing: 'bg-primary-subtle text-primary border border-primary-subtle',
+    ready:      'bg-warning-subtle text-warning-emphasis border border-warning-subtle',
+    delivered:  'bg-success-subtle text-success border border-success-subtle',
+    cancelled:  'bg-secondary-subtle text-secondary border border-secondary-subtle',
 };
 
 const statusLabel = {
@@ -127,9 +127,23 @@ function CreateModal({ rooms, onClose }) {
 }
 
 function UpdateStatusModal({ item, onClose }) {
-    const { data, setData, put, processing } = useForm({
+    const formatDateTimeLocal = (dateString) => {
+        if (!dateString) return '';
+        const date = new Date(dateString);
+        if (isNaN(date.getTime())) return '';
+        const pad = (num) => String(num).padStart(2, '0');
+        const year = date.getFullYear();
+        const month = pad(date.getMonth() + 1);
+        const day = pad(date.getDate());
+        const hours = pad(date.getHours());
+        const minutes = pad(date.getMinutes());
+        return `${year}-${month}-${day}T${hours}:${minutes}`;
+    };
+
+    const { data, setData, put, processing, errors } = useForm({
         status: item.status,
         notes:  item.notes ?? '',
+        estimated_ready_at: formatDateTimeLocal(item.estimated_ready_at),
     });
 
     function submit(e) {
@@ -156,6 +170,12 @@ function UpdateStatusModal({ item, onClose }) {
                                     <option value="delivered">Dikirim</option>
                                     <option value="cancelled">Dibatalkan</option>
                                 </select>
+                            </div>
+                            <div className="mb-3">
+                                <label className="form-label">Estimasi Selesai / Siap</label>
+                                <input type="datetime-local" className={`form-control ${errors.estimated_ready_at ? 'is-invalid' : ''}`}
+                                    value={data.estimated_ready_at} onChange={e => setData('estimated_ready_at', e.target.value)} />
+                                {errors.estimated_ready_at && <div className="invalid-feedback">{errors.estimated_ready_at}</div>}
                             </div>
                             <div className="mb-3">
                                 <label className="form-label">Catatan</label>
@@ -240,43 +260,44 @@ export default function Index({ items, rooms, filters }) {
                     <table className="table table-hover mb-0">
                         <thead>
                             <tr>
-                                <th>Tamu / Kamar</th>
-                                <th>Item</th>
-                                <th>Jenis</th>
-                                <th>Layanan</th>
-                                <th className="text-center">Qty</th>
-                                <th className="text-end">Total</th>
-                                <th>Status</th>
-                                <th>Estimasi Siap</th>
-                                <th>Aksi</th>
+                                <th style={{ width: '15%', minWidth: '120px', paddingLeft: '1.5rem' }}>Tamu / Kamar</th>
+                                <th style={{ width: '15%', minWidth: '110px' }}>Item</th>
+                                <th style={{ width: '10%', minWidth: '90px' }}>Jenis</th>
+                                <th style={{ width: '10%', minWidth: '90px' }}>Layanan</th>
+                                <th style={{ width: '8%', minWidth: '60px' }} className="text-center">Qty</th>
+                                <th style={{ width: '12%', minWidth: '100px' }} className="text-end">Total</th>
+                                <th style={{ width: '10%', minWidth: '90px' }}>Status</th>
+                                <th style={{ width: '12%', minWidth: '110px' }}>Estimasi Siap</th>
+                                <th style={{ width: '8%', minWidth: '90px' }} className="text-end" style={{ paddingRight: '1.5rem' }}>Aksi</th>
                             </tr>
                         </thead>
                         <tbody>
                             {items.data.length === 0 && (
-                                <tr><td colSpan="9" className="text-center text-muted py-4">Tidak ada item laundry</td></tr>
+                                <tr><td colSpan="9" className="text-center text-muted py-5 fs-6">Tidak ada item laundry</td></tr>
                             )}
                             {items.data.map(item => (
-                                <tr key={item.id}>
-                                    <td>
-                                        <strong>{item.guest?.full_name}</strong><br />
+                                <tr key={item.id} className="align-middle">
+                                    <td style={{ paddingLeft: '1.5rem' }}>
+                                        <span className="fw-bold text-dark">{item.guest?.full_name}</span>
+                                        <br />
                                         <small className="text-muted">Kamar {item.room?.room_number}</small>
                                     </td>
                                     <td>{item.item_name}</td>
                                     <td>{itemTypeLabel[item.item_type]}</td>
-                                    <td><span className="badge bg-light text-dark">{serviceLabel[item.service_type]}</span></td>
+                                    <td><span className="badge bg-light text-dark border">{serviceLabel[item.service_type]}</span></td>
                                     <td className="text-center">{item.quantity}</td>
-                                    <td className="text-end">Rp {Number(item.total_price).toLocaleString('id-ID')}</td>
-                                    <td><span className={`badge ${statusBadge[item.status]}`}>{statusLabel[item.status]}</span></td>
-                                    <td>{item.estimated_ready_at ? new Date(item.estimated_ready_at).toLocaleDateString('id-ID') : '—'}</td>
-                                    <td>
-                                        <div className="d-flex gap-1">
+                                    <td className="text-end fw-medium">Rp {Number(item.total_price).toLocaleString('id-ID')}</td>
+                                    <td><span className={`badge ${statusBadge[item.status]} px-2 py-1`}>{statusLabel[item.status]}</span></td>
+                                    <td className="text-muted small">{item.estimated_ready_at ? new Date(item.estimated_ready_at).toLocaleString('id-ID', { dateStyle: 'short', timeStyle: 'short' }) : '—'}</td>
+                                    <td className="text-end" style={{ paddingRight: '1.5rem' }}>
+                                        <div className="d-inline-flex gap-1">
                                             {canUpdate && (
-                                                <button className="btn btn-sm btn-outline-primary" onClick={() => setEditItem(item)}>
+                                                <button className="btn btn-sm btn-light border-0 text-primary" onClick={() => setEditItem(item)}>
                                                     <i className="bi bi-pencil" />
                                                 </button>
                                             )}
                                             {canDelete && (
-                                                <button className="btn btn-sm btn-outline-danger" onClick={() => deleteItem(item.id)}>
+                                                <button className="btn btn-sm btn-light border-0 text-danger" onClick={() => deleteItem(item.id)}>
                                                     <i className="bi bi-trash" />
                                                 </button>
                                             )}

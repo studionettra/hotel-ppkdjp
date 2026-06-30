@@ -100,6 +100,7 @@ export default function AppLayout({ children, title, breadcrumbs = [] }) {
                                                                 case 'fnb_order_completed': return { title: 'F&B Selesai', icon: 'bi-check-circle', color: 'bg-success' };
                                                                 case 'extra_bed': return { title: 'Extra Bed', icon: 'bi-bed', color: 'bg-success' };
                                                                 case 'housekeeping_task': return { title: 'Tugas HK', icon: 'bi-broom', color: 'bg-info' };
+                                                                case 'housekeeping_task_started': return { title: 'HK Diproses', icon: 'bi-hourglass-split', color: 'bg-primary' };
                                                                 case 'housekeeping_task_completed': return { title: 'HK Selesai', icon: 'bi-check-all', color: 'bg-success' };
                                                                 case 'laundry_order': return { title: 'Laundry', icon: 'bi-basket', color: 'bg-warning' };
                                                                 case 'laundry_order_completed': return { title: 'Laundry Selesai', icon: 'bi-box-seam', color: 'bg-success' };

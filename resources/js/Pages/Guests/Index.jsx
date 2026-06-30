@@ -147,37 +147,54 @@ export default function Index({ guests }) {
                         <input type="text" className="form-control" placeholder="Cari nama atau nomor ID..."
                             value={search} onChange={e => setSearch(e.target.value)} style={{ maxWidth: 320 }} />
                     </div>
-                    <table className="table table-striped table-hover">
-                        <thead>
-                            <tr><th>#</th><th>Nama</th><th>ID</th><th>Perusahaan</th><th>Pekerjaan</th><th>No. HP</th><th>Reservasi</th><th>Aksi</th></tr>
-                        </thead>
-                        <tbody>
-                            {filtered.length === 0 && (
-                                <tr><td colSpan={7} className="text-center text-muted">Tidak ada data tamu.</td></tr>
-                            )}
-                            {filtered.map((g, i) => (
-                                <tr key={g.id}>
-                                    <td>{i + 1}</td>
-                                    <td>
-                                        <Link href={route('guests.show', g.id)} className="fw-semibold">{g.full_name}</Link>
-                                    </td>
-                                    <td><small>{ID_TYPES[g.id_type]}: {g.id_number}</small></td>
-                                    <td>{g.company || '-'}</td>
-                                    <td>{g.profession || '-'}</td>
-                                    <td>{g.phone || '-'}</td>
-                                    <td><span className="badge bg-light text-dark">{g.reservations_count}</span></td>
-                                    <td>
-                                        <button className="btn btn-sm btn-warning me-1" onClick={() => setModal(g)}>
-                                            <i className="bi bi-pencil"></i>
-                                        </button>
-                                        <button className="btn btn-sm btn-danger" onClick={() => destroy(g)}>
-                                            <i className="bi bi-trash"></i>
-                                        </button>
-                                    </td>
+                    <div className="table-responsive">
+                        <table className="table table-hover align-middle mb-0">
+                            <thead>
+                                <tr>
+                                    <th className="ps-4" style={{ width: '5%' }}>#</th>
+                                    <th style={{ width: '22%' }}>Nama</th>
+                                    <th style={{ width: '18%' }}>ID</th>
+                                    <th style={{ width: '15%' }}>Perusahaan</th>
+                                    <th style={{ width: '15%' }}>Pekerjaan</th>
+                                    <th style={{ width: '12%' }}>No. HP</th>
+                                    <th className="text-center" style={{ width: '7%' }}>Reservasi</th>
+                                    <th className="text-center pe-4" style={{ width: '6%' }}>Aksi</th>
                                 </tr>
-                            ))}
-                        </tbody>
-                    </table>
+                            </thead>
+                            <tbody>
+                                {filtered.length === 0 && (
+                                    <tr><td colSpan={8} className="text-center text-muted py-4">Tidak ada data tamu.</td></tr>
+                                )}
+                                {filtered.map((g, i) => (
+                                    <tr key={g.id}>
+                                        <td className="ps-4 text-secondary">{i + 1}</td>
+                                        <td>
+                                            <Link href={route('guests.show', g.id)} className="fw-semibold text-primary">{g.full_name}</Link>
+                                        </td>
+                                        <td><span className="text-body" style={{ fontSize: '0.85rem' }}>{ID_TYPES[g.id_type]}: {g.id_number}</span></td>
+                                        <td><span className="text-body" style={{ fontSize: '0.85rem' }}>{g.company || '-'}</span></td>
+                                        <td><span className="text-body" style={{ fontSize: '0.85rem' }}>{g.profession || '-'}</span></td>
+                                        <td><span className="text-body-secondary" style={{ fontSize: '0.85rem' }}>{g.phone || '-'}</span></td>
+                                        <td className="text-center">
+                                            <span className="badge bg-primary bg-opacity-10 text-primary border border-primary-subtle rounded-pill px-2 py-1">
+                                                {g.reservations_count}
+                                            </span>
+                                        </td>
+                                        <td className="text-center pe-4">
+                                            <div className="d-flex align-items-center justify-content-center gap-1">
+                                                <button className="btn btn-icon btn-link text-warning p-1 mb-0 border-0" onClick={() => setModal(g)} title="Edit">
+                                                    <i className="bi bi-pencil fs-6"></i>
+                                                </button>
+                                                <button className="btn btn-icon btn-link text-danger p-1 mb-0 border-0" onClick={() => destroy(g)} title="Hapus">
+                                                    <i className="bi bi-trash fs-6"></i>
+                                                </button>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                ))}
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
             </div>
 

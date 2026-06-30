@@ -53,33 +53,33 @@ export default function Index({ sheets, rooms }) {
                 </div>
                 <div className="card-body">
                     <div className="table-responsive">
-                        <table className="table table-hover">
+                        <table className="table table-hover align-middle">
                             <thead>
                                 <tr>
-                                    <th>Tanggal</th>
-                                    <th>Kamar</th>
-                                    <th>Waktu In-Out</th>
-                                    <th>Status Akhir</th>
-                                    <th>Dilaporkan Oleh</th>
-                                    <th>Catatan</th>
-                                    <th>Aksi</th>
+                                    <th style={{ width: '12%', minWidth: '110px', paddingLeft: '1.5rem' }}>Tanggal</th>
+                                    <th style={{ width: '10%', minWidth: '80px' }}>Kamar</th>
+                                    <th style={{ width: '15%', minWidth: '120px' }}>Waktu In-Out</th>
+                                    <th style={{ width: '15%', minWidth: '120px' }}>Status Akhir</th>
+                                    <th style={{ width: '15%', minWidth: '130px' }}>Dilaporkan Oleh</th>
+                                    <th style={{ width: '23%', minWidth: '150px' }}>Catatan</th>
+                                    <th style={{ width: '10%', minWidth: '90px', paddingRight: '1.5rem' }} className="text-end">Aksi</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                {sheets.data.length === 0 && <tr><td colSpan={7} className="text-center text-muted">Belum ada laporan control sheet.</td></tr>}
+                                {sheets.data.length === 0 && <tr><td colSpan={7} className="text-center text-muted py-5 fs-6">Belum ada laporan control sheet.</td></tr>}
                                 {sheets.data.map(sheet => (
-                                    <tr key={sheet.id}>
-                                        <td>{new Date(sheet.date).toLocaleDateString('id-ID')}</td>
-                                        <td><strong>{sheet.room?.room_number}</strong></td>
+                                    <tr key={sheet.id} className="align-middle">
+                                        <td style={{ paddingLeft: '1.5rem' }}>{new Date(sheet.date).toLocaleDateString('id-ID')}</td>
+                                        <td><span className="fw-bold text-dark">{sheet.room?.room_number}</span></td>
                                         <td>{sheet.time_in ? `${sheet.time_in} - ${sheet.time_out || '?'}` : '-'}</td>
                                         <td>
-                                            {sheet.room_status ? <span className="badge bg-secondary">{ROOM_STATUSES[sheet.room_status] || sheet.room_status}</span> : '-'}
+                                            {sheet.room_status ? <span className="badge bg-secondary-subtle text-secondary-emphasis border border-secondary-subtle px-2 py-1">{ROOM_STATUSES[sheet.room_status] || sheet.room_status}</span> : '-'}
                                         </td>
                                         <td>{sheet.attendant?.name || '-'}</td>
                                         <td>{sheet.remarks || '-'}</td>
-                                        <td>
-                                            <button className="btn btn-sm btn-info text-white" onClick={() => setViewData(sheet)} title="Lihat Detail Amenities">
-                                                <i className="bi bi-eye"></i> Detail
+                                        <td className="text-end" style={{ paddingRight: '1.5rem' }}>
+                                            <button className="btn btn-sm btn-light border-0 text-info" onClick={() => setViewData(sheet)} title="Lihat Detail Amenities">
+                                                <i className="bi bi-eye me-1"></i> Detail
                                             </button>
                                         </td>
                                     </tr>

@@ -218,64 +218,70 @@ export default function Index({ categories }) {
                             </h6>
                             {cat.description && <small className="text-muted">{cat.description}</small>}
                         </div>
-                        <div className="d-flex gap-1">
+                        <div className="d-flex align-items-center gap-1">
                             {canUpdateMenu && (
-                                <button className="btn btn-sm btn-outline-secondary" onClick={() => setCatModal(cat)}>
-                                    <i className="bi bi-pencil" />
+                                <button className="btn btn-icon btn-link text-warning p-1 mb-0 border-0" onClick={() => setCatModal(cat)} title="Edit Kategori">
+                                    <i className="bi bi-pencil fs-6" />
                                 </button>
                             )}
                             {canDeleteMenu && (
-                                <button className="btn btn-sm btn-outline-danger" onClick={() => deleteCategory(cat.id)}>
-                                    <i className="bi bi-trash" />
+                                <button className="btn btn-icon btn-link text-danger p-1 mb-0 border-0" onClick={() => deleteCategory(cat.id)} title="Hapus Kategori">
+                                    <i className="bi bi-trash fs-6" />
                                 </button>
                             )}
                         </div>
                     </div>
                     <div className="table-responsive">
-                        <table className="table table-hover mb-0">
-                            <thead className="table-light">
+                        <table className="table table-hover align-middle mb-0">
+                            <thead>
                                 <tr>
-                                    <th>Kode</th>
-                                    <th>Nama</th>
-                                    <th>Deskripsi</th>
-                                    <th>Satuan</th>
-                                    <th className="text-end">Harga</th>
-                                    <th className="text-center">Tersedia</th>
-                                    <th>Aksi</th>
+                                    <th className="ps-4" style={{ width: '10%' }}>Kode</th>
+                                    <th style={{ width: '22%' }}>Nama</th>
+                                    <th style={{ width: '33%' }}>Deskripsi</th>
+                                    <th style={{ width: '10%' }}>Satuan</th>
+                                    <th className="text-end" style={{ width: '12%' }}>Harga</th>
+                                    <th className="text-center" style={{ width: '8%' }}>Tersedia</th>
+                                    <th className="text-center pe-4" style={{ width: '5%' }}>Aksi</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 {cat.items?.length === 0 && (
-                                    <tr><td colSpan="7" className="text-center text-muted py-3">Belum ada item</td></tr>
+                                    <tr><td colSpan="7" className="text-center text-muted py-4">Belum ada item</td></tr>
                                 )}
-                                {cat.items?.map(item => (
-                                    <tr key={item.id}>
-                                        <td><code>{item.code}</code></td>
-                                        <td>{item.name}</td>
-                                        <td><small className="text-muted">{item.description ?? '—'}</small></td>
-                                        <td>{item.unit}</td>
-                                        <td className="text-end">Rp {Number(item.price).toLocaleString('id-ID')}</td>
-                                        <td className="text-center">
-                                            <span className={`badge ${item.is_available ? 'bg-success' : 'bg-secondary'}`}>
-                                                {item.is_available ? 'Ya' : 'Tidak'}
-                                            </span>
-                                        </td>
-                                        <td>
-                                            <div className="d-flex gap-1">
-                                                {canUpdateMenu && (
-                                                    <button className="btn btn-sm btn-outline-primary" onClick={() => setItemModal(item)}>
-                                                        <i className="bi bi-pencil" />
-                                                    </button>
-                                                )}
-                                                {canDeleteMenu && (
-                                                    <button className="btn btn-sm btn-outline-danger" onClick={() => deleteItem(item.id)}>
-                                                        <i className="bi bi-trash" />
-                                                    </button>
-                                                )}
-                                            </div>
-                                        </td>
-                                    </tr>
-                                ))}
+                                {cat.items?.map(item => {
+                                    const availableBadge = item.is_available 
+                                        ? 'bg-success bg-opacity-10 text-success border border-success-subtle' 
+                                        : 'bg-body-secondary text-secondary border border-secondary-subtle';
+
+                                    return (
+                                        <tr key={item.id}>
+                                            <td className="ps-4"><code>{item.code}</code></td>
+                                            <td><span className="fw-semibold text-body">{item.name}</span></td>
+                                            <td><span className="text-body-secondary" style={{ fontSize: '0.85rem' }}>{item.description ?? '—'}</span></td>
+                                            <td><span className="text-body" style={{ fontSize: '0.85rem' }}>{item.unit}</span></td>
+                                            <td className="text-end"><span className="fw-medium">Rp {Number(item.price).toLocaleString('id-ID')}</span></td>
+                                            <td className="text-center">
+                                                <span className={`badge ${availableBadge} px-2 py-1`} style={{ fontSize: '0.7rem' }}>
+                                                    {item.is_available ? 'Ya' : 'Tidak'}
+                                                </span>
+                                            </td>
+                                            <td className="text-center pe-4">
+                                                <div className="d-flex align-items-center justify-content-center gap-1">
+                                                    {canUpdateMenu && (
+                                                        <button className="btn btn-icon btn-link text-warning p-1 mb-0 border-0" onClick={() => setItemModal(item)} title="Edit Item">
+                                                            <i className="bi bi-pencil fs-6" />
+                                                        </button>
+                                                    )}
+                                                    {canDeleteMenu && (
+                                                        <button className="btn btn-icon btn-link text-danger p-1 mb-0 border-0" onClick={() => deleteItem(item.id)} title="Hapus Item">
+                                                            <i className="bi bi-trash fs-6" />
+                                                        </button>
+                                                    )}
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    );
+                                })}
                             </tbody>
                         </table>
                     </div>

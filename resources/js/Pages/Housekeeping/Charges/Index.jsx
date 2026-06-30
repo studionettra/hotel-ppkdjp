@@ -124,38 +124,38 @@ export default function Index({ charges, activeRooms }) {
                         <table className="table table-hover align-middle">
                             <thead>
                                 <tr>
-                                    <th>Tanggal</th>
-                                    <th>Kamar</th>
-                                    <th>Tamu</th>
-                                    <th>Jenis</th>
-                                    <th>Deskripsi</th>
-                                    <th className="text-center">Qty</th>
-                                    <th className="text-end">Total Biaya</th>
-                                    <th>Dilaporkan Oleh</th>
+                                    <th style={{ width: '12%', minWidth: '110px', paddingLeft: '1.5rem' }}>Tanggal</th>
+                                    <th style={{ width: '10%', minWidth: '80px' }}>Kamar</th>
+                                    <th style={{ width: '15%', minWidth: '120px' }}>Tamu</th>
+                                    <th style={{ width: '12%', minWidth: '100px' }}>Jenis</th>
+                                    <th style={{ width: '20%', minWidth: '150px' }}>Deskripsi</th>
+                                    <th style={{ width: '8%', minWidth: '60px' }} className="text-center">Qty</th>
+                                    <th style={{ width: '13%', minWidth: '110px' }} className="text-end">Total Biaya</th>
+                                    <th style={{ width: '10%', minWidth: '100px', paddingRight: '1.5rem' }}>Dilaporkan Oleh</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 {charges.data.length === 0 ? (
                                     <tr>
-                                        <td colSpan="8" className="text-center py-4 text-muted">Belum ada riwayat pelaporan tagihan.</td>
+                                        <td colSpan="8" className="text-center py-5 text-muted fs-6">Belum ada riwayat pelaporan tagihan.</td>
                                     </tr>
                                 ) : (
                                     charges.data.map(charge => (
-                                        <tr key={charge.id}>
-                                            <td>{formatTanggal(charge.charge_date)}</td>
+                                        <tr key={charge.id} className="align-middle">
+                                            <td style={{ paddingLeft: '1.5rem' }}>{formatTanggal(charge.charge_date)}</td>
                                             <td>
-                                                <strong>{charge.folio?.check_in?.room?.room_number ?? '-'}</strong>
+                                                <span className="fw-bold text-dark">{charge.folio?.check_in?.room?.room_number ?? '-'}</span>
                                             </td>
                                             <td>{charge.folio?.guest?.full_name ?? '-'}</td>
                                             <td>
-                                                <span className={`badge ${charge.charge_type === 'minibar' ? 'bg-info' : 'bg-warning'}`}>
+                                                <span className={`badge ${charge.charge_type === 'minibar' ? 'bg-info-subtle text-info border border-info-subtle' : 'bg-warning-subtle text-warning-emphasis border border-warning-subtle'} px-2 py-1`}>
                                                     {charge.charge_type === 'minibar' ? 'Minibar' : 'Kerusakan/Lainnya'}
                                                 </span>
                                             </td>
                                             <td>{charge.description}</td>
                                             <td className="text-center">{charge.quantity}</td>
                                             <td className="text-end text-danger fw-bold">Rp {Number(charge.amount).toLocaleString('id-ID')}</td>
-                                            <td>{charge.created_by?.name ?? '-'}</td>
+                                            <td style={{ paddingRight: '1.5rem' }}>{charge.created_by?.name ?? '-'}</td>
                                         </tr>
                                     ))
                                 )}

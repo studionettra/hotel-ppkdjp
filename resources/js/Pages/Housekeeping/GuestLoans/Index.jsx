@@ -42,38 +42,38 @@ export default function Index({ loans, rooms, filters }) {
                         </div>
                     </div>
                     <div className="table-responsive">
-                        <table className="table table-hover">
+                        <table className="table table-hover align-middle">
                             <thead>
                                 <tr>
-                                    <th>Kamar</th>
-                                    <th>Barang</th>
-                                    <th>Tgl Pinjam</th>
-                                    <th>Tgl Kembali</th>
-                                    <th>Harga</th>
-                                    <th>Status</th>
-                                    <th>Catatan</th>
-                                    <th>Aksi</th>
+                                    <th style={{ width: '10%', minWidth: '80px', paddingLeft: '1.5rem' }}>Kamar</th>
+                                    <th style={{ width: '15%', minWidth: '120px' }}>Barang</th>
+                                    <th style={{ width: '15%', minWidth: '130px' }}>Tgl Pinjam</th>
+                                    <th style={{ width: '15%', minWidth: '130px' }}>Tgl Kembali</th>
+                                    <th style={{ width: '12%', minWidth: '110px' }}>Harga</th>
+                                    <th style={{ width: '12%', minWidth: '110px' }}>Status</th>
+                                    <th style={{ width: '16%', minWidth: '130px' }}>Catatan</th>
+                                    <th style={{ width: '10%', minWidth: '90px', paddingRight: '1.5rem' }} className="text-end">Aksi</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                {loans.data.length === 0 && <tr><td colSpan={8} className="text-center text-muted">Belum ada peminjaman barang.</td></tr>}
+                                {loans.data.length === 0 && <tr><td colSpan={8} className="text-center text-muted py-5 fs-6">Belum ada peminjaman barang.</td></tr>}
                                 {loans.data.map(loan => (
-                                    <tr key={loan.id}>
-                                        <td><strong>{loan.room?.room_number}</strong></td>
+                                    <tr key={loan.id} className="align-middle">
+                                        <td style={{ paddingLeft: '1.5rem' }}><span className="fw-bold text-dark">{loan.room?.room_number}</span></td>
                                         <td>{loan.item_type}</td>
-                                        <td>{new Date(loan.loan_date).toLocaleString('id-ID')}</td>
-                                        <td>{loan.return_date ? new Date(loan.return_date).toLocaleString('id-ID') : '-'}</td>
-                                        <td>Rp {Number(loan.price).toLocaleString('id-ID')}</td>
+                                        <td className="text-muted small">{new Date(loan.loan_date).toLocaleString('id-ID', { dateStyle: 'short', timeStyle: 'short' })}</td>
+                                        <td className="text-muted small">{loan.return_date ? new Date(loan.return_date).toLocaleString('id-ID', { dateStyle: 'short', timeStyle: 'short' }) : '-'}</td>
+                                        <td className="fw-medium">Rp {Number(loan.price).toLocaleString('id-ID')}</td>
                                         <td>
-                                            <span className={`badge bg-${loan.status === 'borrowed' ? 'warning text-dark' : 'success'}`}>
+                                            <span className={`badge ${loan.status === 'borrowed' ? 'bg-warning-subtle text-warning-emphasis border border-warning-subtle' : 'bg-success-subtle text-success border border-success-subtle'} px-2 py-1`}>
                                                 {loan.status === 'borrowed' ? 'Dipinjam' : 'Dikembalikan'}
                                             </span>
                                         </td>
                                         <td>{loan.notes || '-'}</td>
-                                        <td>
+                                        <td className="text-end" style={{ paddingRight: '1.5rem' }}>
                                             {loan.status === 'borrowed' && (
-                                                <button className="btn btn-sm btn-success" onClick={() => returnItem(loan)} title="Tandai Dikembalikan">
-                                                    <i className="bi bi-check2-circle"></i> Selesai
+                                                <button className="btn btn-sm btn-light border-0 text-success" onClick={() => returnItem(loan)} title="Tandai Dikembalikan">
+                                                    <i className="bi bi-check2-circle me-1"></i> Selesai
                                                 </button>
                                             )}
                                         </td>

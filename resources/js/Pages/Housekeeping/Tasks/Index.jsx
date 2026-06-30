@@ -3,15 +3,31 @@ import { useForm, usePage, router } from '@inertiajs/react';
 import AppLayout from '@/Layouts/AppLayout';
 
 const statusBadge = {
-    pending:     'bg-secondary',
-    in_progress: 'bg-primary',
-    completed:   'bg-success',
-    cancelled:   'bg-danger',
+    pending:     'bg-secondary-subtle text-secondary border border-secondary-subtle',
+    in_progress: 'bg-primary-subtle text-primary border border-primary-subtle',
+    completed:   'bg-success-subtle text-success border border-success-subtle',
+    cancelled:   'bg-danger-subtle text-danger border border-danger-subtle',
+};
+
+const statusLabel = {
+    pending: 'Pending',
+    in_progress: 'Berlangsung',
+    completed: 'Selesai',
+    cancelled: 'Dibatalkan',
 };
 
 const priorityBadge = {
-    low: 'bg-light text-dark', normal: 'bg-info text-dark',
-    high: 'bg-warning text-dark', urgent: 'bg-danger',
+    low:     'bg-light text-secondary border border-secondary-subtle',
+    normal:  'bg-info-subtle text-info-emphasis border border-info-subtle',
+    high:    'bg-warning-subtle text-warning-emphasis border border-warning-subtle',
+    urgent:  'bg-danger-subtle text-danger-emphasis border border-danger-subtle',
+};
+
+const priorityLabel = {
+    low: 'Rendah',
+    normal: 'Normal',
+    high: 'Tinggi',
+    urgent: 'Urgent',
 };
 
 const taskTypeLabel = {
@@ -111,11 +127,33 @@ function CreateModal({ rooms, staffList, onClose }) {
 }
 
 function UpdateModal({ task, staffList, onClose }) {
+    const { auth } = usePage().props;
+
+    const formatDateTimeLocal = (dateString) => {
+        if (!dateString) return '';
+        const date = new Date(dateString);
+        if (isNaN(date.getTime())) return '';
+        const pad = (num) => String(num).padStart(2, '0');
+        const year = date.getFullYear();
+        const month = pad(date.getMonth() + 1);
+        const day = pad(date.getDate());
+        const hours = pad(date.getHours());
+        const minutes = pad(date.getMinutes());
+        return `${year}-${month}-${day}T${hours}:${minutes}`;
+    };
+
+    // Otomatis memilih staf housekeeping yang sedang login jika belum ditugaskan
+    const loggedInUser = auth.user;
+    const isHousekeepingStaff = staffList.some(s => s.id === loggedInUser.id);
+    const defaultAssignedTo = task.assigned_to?.id ?? (isHousekeepingStaff ? loggedInUser.id : '');
+
     const { data, setData, put, processing, errors } = useForm({
         status:      task.status,
         priority:    task.priority,
-        assigned_to: task.assigned_to ?? '',
+        assigned_to: defaultAssignedTo,
         notes:       task.notes ?? '',
+        due_at:      formatDateTimeLocal(task.due_at),
+        completed_at: formatDateTimeLocal(task.completed_at),
     });
 
     function submit(e) {
@@ -160,6 +198,20 @@ function UpdateModal({ task, staffList, onClose }) {
                                     {staffList.map(s => <option key={s.id} value={s.id}>{s.name}</option>)}
                                 </select>
                             </div>
+                            <div className="mb-3">
+                                <label className="form-label">Tenggat Waktu</label>
+                                <input type="datetime-local" className={`form-control ${errors.due_at ? 'is-invalid' : ''}`}
+                                    value={data.due_at} onChange={e => setData('due_at', e.target.value)} />
+                                {errors.due_at && <div className="invalid-feedback">{errors.due_at}</div>}
+                            </div>
+                            {data.status === 'completed' && (
+                                <div className="mb-3">
+                                    <label className="form-label">Waktu Selesai</label>
+                                    <input type="datetime-local" className={`form-control ${errors.completed_at ? 'is-invalid' : ''}`}
+                                        value={data.completed_at} onChange={e => setData('completed_at', e.target.value)} />
+                                    {errors.completed_at && <div className="invalid-feedback">{errors.completed_at}</div>}
+                                </div>
+                            )}
                             <div className="mb-3">
                                 <label className="form-label">Catatan</label>
                                 <textarea className="form-control" rows="3"
@@ -310,43 +362,54 @@ export default function Index({ tasks, rooms, staffList, filters }) {
                     <table className="table table-hover mb-0">
                         <thead>
                             <tr>
-                                <th>Kamar</th>
-                                <th>Jenis</th>
-                                <th>Prioritas</th>
-                                <th>Status</th>
-                                <th>Ditugaskan ke</th>
-                                <th>Tenggat</th>
-                                <th>Selesai</th>
-                                <th>Aksi</th>
+                                <th style={{ width: '10%', minWidth: '90px', paddingLeft: '1.5rem' }}>Kamar</th>
+                                <th style={{ width: '15%', minWidth: '120px' }}>Jenis</th>
+                                <th style={{ width: '10%', minWidth: '100px' }}>Prioritas</th>
+                                <th style={{ width: '12%', minWidth: '110px' }}>Status</th>
+                                <th style={{ width: '18%', minWidth: '150px' }}>Ditugaskan ke</th>
+                                <th style={{ width: '15%', minWidth: '130px' }}>Tenggat</th>
+                                <th style={{ width: '15%', minWidth: '130px' }}>Selesai</th>
+                                <th style={{ width: '10%', minWidth: '90px', paddingRight: '1.5rem' }} className="text-end">Aksi</th>
                             </tr>
                         </thead>
                         <tbody>
                             {tasks.data.length === 0 && (
-                                <tr><td colSpan="8" className="text-center text-muted py-4">Tidak ada tugas</td></tr>
+                                <tr><td colSpan="8" className="text-center text-muted py-5 fs-6">Tidak ada tugas yang terdaftar</td></tr>
                             )}
                             {tasks.data.map(task => (
-                                <tr key={task.id}>
-                                    <td><strong>{task.room?.room_number}</strong><br /><small className="text-muted">Lt. {task.room?.floor?.floor_number}</small></td>
-                                    <td>
-                                        {task.task_type === 'extrabed' 
-                                            ? <span className="badge bg-primary px-2">{taskTypeLabel[task.task_type]}</span>
-                                            : taskTypeLabel[task.task_type]
-                                        }
+                                <tr key={task.id} className="align-middle">
+                                    <td style={{ paddingLeft: '1.5rem' }}>
+                                        <span className="fw-bold text-dark">{task.room?.room_number}</span>
+                                        <br />
+                                        <small className="text-muted">Lt. {task.room?.floor?.floor_number}</small>
                                     </td>
-                                    <td><span className={`badge ${priorityBadge[task.priority]}`}>{task.priority}</span></td>
-                                    <td><span className={`badge ${statusBadge[task.status]}`}>{task.status}</span></td>
-                                    <td>{task.assigned_to ? task.assigned_to?.name : <span className="text-muted">—</span>}</td>
-                                    <td>{task.due_at ? new Date(task.due_at).toLocaleDateString('id-ID') : '—'}</td>
-                                    <td>{task.completed_at ? new Date(task.completed_at).toLocaleDateString('id-ID') : '—'}</td>
                                     <td>
-                                        <div className="d-flex gap-1">
+                                        {task.task_type === 'extrabed' ? (
+                                            <span className="badge bg-primary-subtle text-primary border border-primary-subtle px-2 py-1">{taskTypeLabel[task.task_type]}</span>
+                                        ) : (
+                                            <span className="text-dark-emphasis">{taskTypeLabel[task.task_type]}</span>
+                                        )}
+                                    </td>
+                                    <td><span className={`badge ${priorityBadge[task.priority]} px-2 py-1`}>{priorityLabel[task.priority] ?? task.priority}</span></td>
+                                    <td><span className={`badge ${statusBadge[task.status]} px-2 py-1`}>{statusLabel[task.status] ?? task.status}</span></td>
+                                    <td className="text-truncate" style={{ maxWidth: '160px' }}>
+                                        {task.assigned_to ? (
+                                            <span className="text-dark fw-medium">{task.assigned_to?.name}</span>
+                                        ) : (
+                                            <span className="text-muted font-monospace">—</span>
+                                        )}
+                                    </td>
+                                    <td className="text-muted small">{task.due_at ? new Date(task.due_at).toLocaleString('id-ID', { dateStyle: 'short', timeStyle: 'short' }) : '—'}</td>
+                                    <td className="text-muted small">{task.completed_at ? new Date(task.completed_at).toLocaleString('id-ID', { dateStyle: 'short', timeStyle: 'short' }) : '—'}</td>
+                                    <td className="text-end" style={{ paddingRight: '1.5rem' }}>
+                                        <div className="d-inline-flex gap-1">
                                             {canUpdate && (
-                                                <button className="btn btn-sm btn-outline-primary" onClick={() => setEditTask(task)}>
+                                                <button className="btn btn-sm btn-light border-0 text-primary" onClick={() => setEditTask(task)}>
                                                     <i className="bi bi-pencil" />
                                                 </button>
                                             )}
                                             {canDelete && (
-                                                <button className="btn btn-sm btn-outline-danger" onClick={() => deleteTask(task.id)}>
+                                                <button className="btn btn-sm btn-light border-0 text-danger" onClick={() => deleteTask(task.id)}>
                                                     <i className="bi bi-trash" />
                                                 </button>
                                             )}

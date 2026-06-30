@@ -46,42 +46,46 @@ export default function Index({ items, rooms, filters }) {
                         </div>
                     </div>
                     <div className="table-responsive">
-                        <table className="table table-hover">
+                        <table className="table table-hover align-middle">
                             <thead>
                                 <tr>
-                                    <th>Waktu Ditemukan</th>
-                                    <th>Lokasi / Kamar</th>
-                                    <th>Deskripsi Barang</th>
-                                    <th>Dilaporkan Oleh</th>
-                                    <th>Status</th>
-                                    <th>Aksi</th>
+                                    <th style={{ width: '15%', minWidth: '130px', paddingLeft: '1.5rem' }}>Waktu Ditemukan</th>
+                                    <th style={{ width: '15%', minWidth: '120px' }}>Lokasi / Kamar</th>
+                                    <th style={{ width: '30%', minWidth: '200px' }}>Deskripsi Barang</th>
+                                    <th style={{ width: '18%', minWidth: '130px' }}>Dilaporkan Oleh</th>
+                                    <th style={{ width: '12%', minWidth: '100px' }}>Status</th>
+                                    <th style={{ width: '10%', minWidth: '90px', paddingRight: '1.5rem' }} className="text-end">Aksi</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                {items.data.length === 0 && <tr><td colSpan={6} className="text-center text-muted">Belum ada laporan barang temuan.</td></tr>}
+                                {items.data.length === 0 && <tr><td colSpan={6} className="text-center text-muted py-5 fs-6">Belum ada laporan barang temuan.</td></tr>}
                                 {items.data.map(item => (
-                                    <tr key={item.id}>
-                                        <td>{new Date(item.found_date).toLocaleDateString('id-ID')} <br/> <small>{item.found_time}</small></td>
+                                    <tr key={item.id} className="align-middle">
+                                        <td style={{ paddingLeft: '1.5rem' }}>
+                                            <span className="text-dark fw-medium">{new Date(item.found_date).toLocaleDateString('id-ID')}</span>
+                                            <br/>
+                                            <small className="text-muted">{item.found_time}</small>
+                                        </td>
                                         <td>
-                                            {item.room ? `Kamar ${item.room.room_number}` : (item.location_found || 'Area Umum')}
+                                            <span className="fw-semibold text-dark-emphasis">{item.room ? `Kamar ${item.room.room_number}` : (item.location_found || 'Area Umum')}</span>
                                         </td>
                                         <td>{item.item_description}</td>
                                         <td>{item.attendant_name || item.reporter?.name || '-'}</td>
                                         <td>
-                                            <span className={`badge bg-${item.status === 'stored' ? 'warning text-dark' : item.status === 'claimed' ? 'success' : 'secondary'}`}>
-                                                {item.status.toUpperCase()}
+                                            <span className={`badge ${item.status === 'stored' ? 'bg-warning-subtle text-warning-emphasis border border-warning-subtle' : item.status === 'claimed' ? 'bg-success-subtle text-success border border-success-subtle' : 'bg-secondary-subtle text-secondary border border-secondary-subtle'} px-2 py-1`}>
+                                                {item.status === 'stored' ? 'Disimpan' : item.status === 'claimed' ? 'Klaim' : 'Dibuang'}
                                             </span>
                                         </td>
-                                        <td>
+                                        <td className="text-end" style={{ paddingRight: '1.5rem' }}>
                                             {item.status === 'stored' && (
-                                                <>
-                                                    <button className="btn btn-sm btn-success me-1" onClick={() => changeStatus(item, 'claimed')} title="Tandai Diambil">
+                                                <div className="d-inline-flex gap-1">
+                                                    <button className="btn btn-sm btn-light border-0 text-success" onClick={() => changeStatus(item, 'claimed')} title="Tandai Diambil">
                                                         <i className="bi bi-check2-circle"></i>
                                                     </button>
-                                                    <button className="btn btn-sm btn-secondary" onClick={() => changeStatus(item, 'disposed')} title="Buang">
+                                                    <button className="btn btn-sm btn-light border-0 text-secondary" onClick={() => changeStatus(item, 'disposed')} title="Buang">
                                                         <i className="bi bi-trash"></i>
                                                     </button>
-                                                </>
+                                                </div>
                                             )}
                                         </td>
                                     </tr>

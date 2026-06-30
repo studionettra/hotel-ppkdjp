@@ -3,10 +3,10 @@ import { useForm, usePage, router } from '@inertiajs/react';
 import AppLayout from '@/Layouts/AppLayout';
 
 const statusBadge = {
-    scheduled:   'bg-info text-dark',
-    in_progress: 'bg-primary',
-    completed:   'bg-success',
-    cancelled:   'bg-secondary',
+    scheduled:   'bg-info-subtle text-info border border-info-subtle',
+    in_progress: 'bg-primary-subtle text-primary border border-primary-subtle',
+    completed:   'bg-success-subtle text-success border border-success-subtle',
+    cancelled:   'bg-secondary-subtle text-secondary border border-secondary-subtle',
 };
 
 const statusLabel = {
@@ -285,40 +285,40 @@ export default function Index({ logs, staffList, filters }) {
                     <table className="table table-hover mb-0">
                         <thead>
                             <tr>
-                                <th>Area</th>
-                                <th>Jenis</th>
-                                <th>Status</th>
-                                <th className="text-center">pH</th>
-                                <th className="text-center">Klorin</th>
-                                <th className="text-center">Suhu</th>
-                                <th>Jadwal</th>
-                                <th>Petugas</th>
-                                <th>Aksi</th>
+                                <th style={{ width: '10%', minWidth: '80px', paddingLeft: '1.5rem' }}>Area</th>
+                                <th style={{ width: '15%', minWidth: '120px' }}>Jenis</th>
+                                <th style={{ width: '12%', minWidth: '110px' }}>Status</th>
+                                <th style={{ width: '8%', minWidth: '60px' }} className="text-center">pH</th>
+                                <th style={{ width: '8%', minWidth: '65px' }} className="text-center">Klorin</th>
+                                <th style={{ width: '8%', minWidth: '65px' }} className="text-center">Suhu</th>
+                                <th style={{ width: '15%', minWidth: '120px' }}>Jadwal</th>
+                                <th style={{ width: '14%', minWidth: '110px' }}>Petugas</th>
+                                <th style={{ width: '10%', minWidth: '90px', paddingRight: '1.5rem' }} className="text-end">Aksi</th>
                             </tr>
                         </thead>
                         <tbody>
                             {logs.data.length === 0 && (
-                                <tr><td colSpan="9" className="text-center text-muted py-4">Tidak ada log maintenance</td></tr>
+                                <tr><td colSpan="9" className="text-center text-muted py-5 fs-6">Tidak ada log maintenance</td></tr>
                             )}
                             {logs.data.map(log => (
-                                <tr key={log.id}>
-                                    <td><span className="badge bg-light text-dark">{poolAreaLabel[log.pool_area]}</span></td>
+                                <tr key={log.id} className="align-middle">
+                                    <td style={{ paddingLeft: '1.5rem' }}><span className="badge bg-light text-dark border">{poolAreaLabel[log.pool_area]}</span></td>
                                     <td>{maintenanceTypeLabel[log.maintenance_type]}</td>
-                                    <td><span className={`badge ${statusBadge[log.status]}`}>{statusLabel[log.status]}</span></td>
-                                    <td className="text-center">{log.ph_level ?? '—'}</td>
-                                    <td className="text-center">{log.chlorine_level ?? '—'}</td>
-                                    <td className="text-center">{log.temperature ? `${log.temperature}°C` : '—'}</td>
-                                    <td>{log.scheduled_at ? new Date(log.scheduled_at).toLocaleDateString('id-ID') : '—'}</td>
+                                    <td><span className={`badge ${statusBadge[log.status]} px-2 py-1`}>{statusLabel[log.status]}</span></td>
+                                    <td className="text-center font-monospace">{log.ph_level ?? '—'}</td>
+                                    <td className="text-center font-monospace">{log.chlorine_level ?? '—'}</td>
+                                    <td className="text-center font-monospace">{log.temperature ? `${log.temperature}°C` : '—'}</td>
+                                    <td className="text-muted small">{log.scheduled_at ? new Date(log.scheduled_at).toLocaleString('id-ID', { dateStyle: 'short', timeStyle: 'short' }) : '—'}</td>
                                     <td>{log.assigned_to?.name ?? <span className="text-muted">—</span>}</td>
-                                    <td>
-                                        <div className="d-flex gap-1">
+                                    <td className="text-end" style={{ paddingRight: '1.5rem' }}>
+                                        <div className="d-inline-flex gap-1">
                                             {canUpdate && (
-                                                <button className="btn btn-sm btn-outline-primary" onClick={() => setEditLog(log)}>
+                                                <button className="btn btn-sm btn-light border-0 text-primary" onClick={() => setEditLog(log)}>
                                                     <i className="bi bi-pencil" />
                                                 </button>
                                             )}
                                             {canDelete && (
-                                                <button className="btn btn-sm btn-outline-danger" onClick={() => deleteLog(log.id)}>
+                                                <button className="btn btn-sm btn-light border-0 text-danger" onClick={() => deleteLog(log.id)}>
                                                     <i className="bi bi-trash" />
                                                 </button>
                                             )}

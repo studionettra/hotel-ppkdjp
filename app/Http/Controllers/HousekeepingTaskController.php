@@ -54,30 +54,45 @@ class HousekeepingTaskController extends Controller
     public function update(Request $request, HousekeepingTask $housekeepingTask)
     {
         $validated = $request->validate([
-            'status'      => ['required', 'in:pending,in_progress,completed,cancelled'],
-            'priority'    => ['nullable', 'in:low,normal,high,urgent'],
-            'assigned_to' => ['nullable', 'exists:users,id'],
-            'notes'       => ['nullable', 'string'],
+            'status'       => ['required', 'in:pending,in_progress,completed,cancelled'],
+            'priority'     => ['nullable', 'in:low,normal,high,urgent'],
+            'assigned_to'  => ['nullable', 'exists:users,id'],
+            'notes'        => ['nullable', 'string'],
+            'due_at'       => ['nullable', 'date'],
+            'completed_at' => ['nullable', 'date'],
         ]);
 
         $now = now();
         if ($validated['status'] === 'in_progress' && !$housekeepingTask->started_at) {
             $validated['started_at'] = $now;
         }
-        if ($validated['status'] === 'completed' && !$housekeepingTask->completed_at) {
-            $validated['completed_at'] = $now;
+
+        if ($validated['status'] === 'completed') {
+            $validated['completed_at'] = $validated['completed_at'] ?: ($housekeepingTask->completed_at ?: $now);
+        } else {
+            $validated['completed_at'] = null;
         }
 
         $oldStatus = $housekeepingTask->status;
         $housekeepingTask->update($validated);
 
+        // Dapatkan semua FO, Administrator, dan Pembuat tugas untuk dinotifikasi
+        $foUsers = \App\Models\User::role('Front Office')->get();
+        $adminUsers = \App\Models\User::role('Administrator')->get();
+        $recipients = $foUsers->merge($adminUsers);
+        if ($housekeepingTask->createdBy) {
+            $recipients->push($housekeepingTask->createdBy);
+        }
+        $recipients = $recipients->unique('id');
+
+        // Notifikasi saat mulai dikerjakan (in_progress)
+        if ($oldStatus !== 'in_progress' && $validated['status'] === 'in_progress') {
+            \Illuminate\Support\Facades\Notification::send($recipients, new \App\Notifications\HousekeepingTaskStarted($housekeepingTask));
+        }
+
+        // Notifikasi saat selesai (completed)
         if ($oldStatus !== 'completed' && $validated['status'] === 'completed') {
-            if ($housekeepingTask->createdBy) {
-                $housekeepingTask->createdBy->notify(new \App\Notifications\HousekeepingTaskCompleted($housekeepingTask));
-            } else {
-                $foUsers = \App\Models\User::permission('front_office.view')->get();
-                \Illuminate\Support\Facades\Notification::send($foUsers, new \App\Notifications\HousekeepingTaskCompleted($housekeepingTask));
-            }
+            \Illuminate\Support\Facades\Notification::send($recipients, new \App\Notifications\HousekeepingTaskCompleted($housekeepingTask));
         }
 
         return back()->with('success', 'Tugas berhasil diperbarui.');

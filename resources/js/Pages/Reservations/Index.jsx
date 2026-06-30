@@ -55,43 +55,82 @@ export default function Index({ reservations }) {
                             {Object.entries(STATUS_LABELS).map(([k, v]) => <option key={k} value={k}>{v}</option>)}
                         </select>
                     </div>
-                    <table className="table table-striped table-hover">
-                        <thead>
-                            <tr><th>Kode</th><th>Tamu</th><th>Tipe Kamar</th><th>No. Kamar</th><th>Check In</th><th>Check Out</th><th>Tamu</th><th>Status</th><th>Aksi</th></tr>
-                        </thead>
-                        <tbody>
-                            {filtered.length === 0 && (
-                                <tr><td colSpan={9} className="text-center text-muted">Tidak ada data reservasi.</td></tr>
-                            )}
-                            {filtered.map(r => (
-                                <tr key={r.id}>
-                                    <td><Link href={route('reservations.show', r.id)} className="fw-semibold">{r.reservation_code}</Link></td>
-                                    <td>{r.guest?.full_name}</td>
-                                    <td>{r.room_type?.name}</td>
-                                    <td>{r.room?.room_number ?? '-'}</td>
-                                    <td>{formatTanggal(r.check_in_date)}</td>
-                                    <td>{formatTanggal(r.check_out_date)}</td>
-                                    <td>{r.adults + r.children}</td>
-                                    <td><span className={`badge bg-${STATUS_COLORS[r.status]}`}>{STATUS_LABELS[r.status]}</span></td>
-                                    <td className="d-flex gap-1">
-                                        <Link href={route('reservations.show', r.id)} className="btn btn-sm btn-info">
-                                            <i className="bi bi-eye"></i>
-                                        </Link>
-                                        {['pending', 'confirmed'].includes(r.status) && (
-                                            <>
-                                                <Link href={route('reservations.edit', r.id)} className="btn btn-sm btn-warning">
-                                                    <i className="bi bi-pencil"></i>
-                                                </Link>
-                                                <button className="btn btn-sm btn-danger" onClick={() => cancel(r)}>
-                                                    <i className="bi bi-x-circle"></i>
-                                                </button>
-                                            </>
-                                        )}
-                                    </td>
+                    <div className="table-responsive">
+                        <table className="table table-hover align-middle mb-0">
+                            <thead>
+                                <tr>
+                                    <th className="ps-4" style={{ width: '12%' }}>Kode</th>
+                                    <th style={{ width: '18%' }}>Tamu</th>
+                                    <th style={{ width: '15%' }}>Tipe Kamar</th>
+                                    <th className="text-center" style={{ width: '10%' }}>No. Kamar</th>
+                                    <th style={{ width: '12%' }}>Check In</th>
+                                    <th style={{ width: '12%' }}>Check Out</th>
+                                    <th className="text-center" style={{ width: '5%' }}>Pax</th>
+                                    <th style={{ width: '10%' }}>Status</th>
+                                    <th className="text-center pe-4" style={{ width: '6%' }}>Aksi</th>
                                 </tr>
-                            ))}
-                        </tbody>
-                    </table>
+                            </thead>
+                            <tbody>
+                                {filtered.length === 0 && (
+                                    <tr><td colSpan={9} className="text-center text-muted py-4">Tidak ada data reservasi.</td></tr>
+                                )}
+                                {filtered.map(r => {
+                                    const badgeClass = {
+                                        pending: 'bg-secondary bg-opacity-10 text-secondary border border-secondary-subtle',
+                                        confirmed: 'bg-primary bg-opacity-10 text-primary border border-primary-subtle',
+                                        checked_in: 'bg-success bg-opacity-10 text-success border border-success-subtle',
+                                        checked_out: 'bg-body-secondary text-secondary border border-secondary-subtle',
+                                        cancelled: 'bg-danger bg-opacity-10 text-danger border border-danger-subtle',
+                                        no_show: 'bg-warning bg-opacity-10 text-warning border border-warning-subtle',
+                                    }[r.status] || 'bg-light text-dark';
+
+                                    return (
+                                        <tr key={r.id}>
+                                            <td className="ps-4">
+                                                <Link href={route('reservations.show', r.id)} className="fw-semibold text-primary">{r.reservation_code}</Link>
+                                            </td>
+                                            <td>
+                                                <div className="fw-medium">{r.guest?.full_name}</div>
+                                            </td>
+                                            <td><span className="text-body" style={{ fontSize: '0.85rem' }}>{r.room_type?.name}</span></td>
+                                            <td className="text-center">
+                                                {r.room?.room_number ? (
+                                                    <span className="badge bg-light text-secondary border px-2 py-1">{r.room.room_number}</span>
+                                                ) : (
+                                                    <span className="text-muted">—</span>
+                                                )}
+                                            </td>
+                                            <td><span style={{ fontSize: '0.85rem' }}>{formatTanggal(r.check_in_date)}</span></td>
+                                            <td><span style={{ fontSize: '0.85rem' }}>{formatTanggal(r.check_out_date)}</span></td>
+                                            <td className="text-center"><span className="fw-semibold text-secondary">{r.adults + r.children}</span></td>
+                                            <td>
+                                                <span className={`badge ${badgeClass} px-2.5 py-1.5`} style={{ fontSize: '0.725rem' }}>
+                                                    {STATUS_LABELS[r.status]}
+                                                </span>
+                                            </td>
+                                            <td className="text-center pe-4">
+                                                <div className="d-flex align-items-center justify-content-center gap-1">
+                                                    <Link href={route('reservations.show', r.id)} className="btn btn-icon btn-link text-info p-1 mb-0 border-0" title="Detail">
+                                                        <i className="bi bi-eye fs-6"></i>
+                                                    </Link>
+                                                    {['pending', 'confirmed'].includes(r.status) && (
+                                                        <>
+                                                            <Link href={route('reservations.edit', r.id)} className="btn btn-icon btn-link text-warning p-1 mb-0 border-0" title="Edit">
+                                                                <i className="bi bi-pencil fs-6"></i>
+                                                            </Link>
+                                                            <button className="btn btn-icon btn-link text-danger p-1 mb-0 border-0" onClick={() => cancel(r)} title="Batalkan">
+                                                                <i className="bi bi-x-circle fs-6"></i>
+                                                            </button>
+                                                        </>
+                                                    )}
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    );
+                                })}
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
             </div>
         </AppLayout>

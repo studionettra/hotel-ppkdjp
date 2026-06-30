@@ -127,55 +127,81 @@ export default function Index({ orders, filters }) {
                     </div>
                 </div>
                 <div className="table-responsive">
-                    <table className="table table-hover mb-0">
+                    <table className="table table-hover align-middle mb-0">
                         <thead>
                             <tr>
-                                <th>No. Pesanan</th>
-                                <th>Tipe</th>
-                                <th>Tamu / Meja</th>
-                                <th>Status</th>
-                                <th className="text-end">Total</th>
-                                <th>Kasir</th>
-                                <th>Waktu</th>
-                                <th>Aksi</th>
+                                <th className="ps-4" style={{ width: '12%' }}>No. Pesanan</th>
+                                <th style={{ width: '12%' }}>Tipe</th>
+                                <th style={{ width: '23%' }}>Tamu / Meja</th>
+                                <th style={{ width: '12%' }}>Status</th>
+                                <th className="text-end" style={{ width: '12%' }}>Total</th>
+                                <th style={{ width: '12%' }}>Kasir</th>
+                                <th style={{ width: '12%' }}>Waktu</th>
+                                <th className="text-center pe-4" style={{ width: '5%' }}>Aksi</th>
                             </tr>
                         </thead>
                         <tbody>
                             {orders.data.length === 0 && (
                                 <tr><td colSpan="8" className="text-center text-muted py-4">Belum ada pesanan</td></tr>
                             )}
-                            {orders.data.map(order => (
-                                <tr key={order.id}>
-                                    <td><code>{order.order_number}</code></td>
-                                    <td><span className="badge bg-light text-dark">{orderTypeLabel[order.order_type]}</span></td>
-                                    <td>
-                                        {order.guest ? order.guest.full_name : '—'}
-                                        {order.room && <><br /><small className="text-muted">Kamar {order.room.room_number}</small></>}
-                                        {order.table_number && <><br /><small className="text-muted">Meja {order.table_number}</small></>}
-                                    </td>
-                                    <td><span className={`badge ${statusBadge[order.status]}`}>{statusLabel[order.status]}</span></td>
-                                    <td className="text-end">Rp {Number(order.total).toLocaleString('id-ID')}</td>
-                                    <td>{order.created_by?.name}</td>
-                                    <td><small>{new Date(order.created_at).toLocaleDateString('id-ID')}</small></td>
-                                    <td>
-                                        <div className="d-flex gap-1">
-                                            <a href={route('fnb.orders.show', order.id)} className="btn btn-sm btn-outline-info">
-                                                <i className="bi bi-eye" />
-                                            </a>
-                                            {canUpdate && order.status !== 'completed' && order.status !== 'cancelled' && (
-                                                <button className="btn btn-sm btn-outline-primary" onClick={() => setEditOrder(order)}>
-                                                    <i className="bi bi-pencil" />
-                                                </button>
-                                            )}
-                                            {canClose && order.status === 'cancelled' && (
-                                                <button className="btn btn-sm btn-outline-danger" onClick={() => deleteOrder(order.id)}>
-                                                    <i className="bi bi-trash" />
-                                                </button>
-                                            )}
-                                        </div>
-                                    </td>
-                                </tr>
-                            ))}
+                            {orders.data.map(order => {
+                                const badgeClass = {
+                                    pending:   'bg-warning bg-opacity-10 text-warning border border-warning-subtle',
+                                    preparing: 'bg-primary bg-opacity-10 text-primary border border-primary-subtle',
+                                    served:    'bg-info bg-opacity-10 text-info border border-info-subtle',
+                                    completed: 'bg-success bg-opacity-10 text-success border border-success-subtle',
+                                    cancelled: 'bg-secondary bg-opacity-10 text-secondary border border-secondary-subtle',
+                                }[order.status] || 'bg-light text-dark';
+
+                                const typeBadgeClass = {
+                                    dine_in:      'bg-primary bg-opacity-10 text-primary border border-primary-subtle',
+                                    room_service: 'bg-success bg-opacity-10 text-success border border-success-subtle',
+                                    takeaway:     'bg-warning bg-opacity-10 text-warning border border-warning-subtle',
+                                }[order.order_type] || 'bg-light text-dark';
+
+                                return (
+                                    <tr key={order.id}>
+                                        <td className="ps-4">
+                                            <a href={route('fnb.orders.show', order.id)} className="fw-semibold text-primary">{order.order_number}</a>
+                                        </td>
+                                        <td>
+                                            <span className={`badge ${typeBadgeClass} px-2 py-1`} style={{ fontSize: '0.7rem' }}>
+                                                {orderTypeLabel[order.order_type]}
+                                            </span>
+                                        </td>
+                                        <td>
+                                            <div className="fw-medium text-body">{order.guest ? order.guest.full_name : '—'}</div>
+                                            {order.room && <div className="text-muted small mt-0.5"><i className="bi bi-door-open me-1" />Kamar {order.room.room_number}</div>}
+                                            {order.table_number && <div className="text-muted small mt-0.5"><i className="bi bi-grid me-1" />Meja {order.table_number}</div>}
+                                        </td>
+                                        <td>
+                                            <span className={`badge ${badgeClass} px-2.5 py-1.5`} style={{ fontSize: '0.725rem' }}>
+                                                {statusLabel[order.status]}
+                                            </span>
+                                        </td>
+                                        <td className="text-end fw-semibold">Rp {Number(order.total).toLocaleString('id-ID')}</td>
+                                        <td><span className="text-body" style={{ fontSize: '0.85rem' }}>{order.created_by?.name}</span></td>
+                                        <td><span className="text-body-secondary" style={{ fontSize: '0.85rem' }}>{new Date(order.created_at).toLocaleDateString('id-ID')}</span></td>
+                                        <td className="text-center pe-4">
+                                            <div className="d-flex align-items-center justify-content-center gap-1">
+                                                <a href={route('fnb.orders.show', order.id)} className="btn btn-icon btn-link text-info p-1 mb-0 border-0" title="Detail">
+                                                    <i className="bi bi-eye fs-6" />
+                                                </a>
+                                                {canUpdate && order.status !== 'completed' && order.status !== 'cancelled' && (
+                                                    <button className="btn btn-icon btn-link text-warning p-1 mb-0 border-0" onClick={() => setEditOrder(order)} title="Update Status">
+                                                        <i className="bi bi-pencil fs-6" />
+                                                    </button>
+                                                )}
+                                                {canClose && order.status === 'cancelled' && (
+                                                    <button className="btn btn-icon btn-link text-danger p-1 mb-0 border-0" onClick={() => deleteOrder(order.id)} title="Hapus">
+                                                        <i className="bi bi-trash fs-6" />
+                                                    </button>
+                                                )}
+                                            </div>
+                                        </td>
+                                    </tr>
+                                );
+                            })}
                         </tbody>
                     </table>
                 </div>

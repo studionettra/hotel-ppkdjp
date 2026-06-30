@@ -52,8 +52,9 @@ class LaundryController extends Controller
     public function update(Request $request, LaundryItem $laundryItem)
     {
         $validated = $request->validate([
-            'status' => ['required', 'in:received,processing,ready,delivered,cancelled'],
-            'notes'  => ['nullable', 'string'],
+            'status'             => ['required', 'in:received,processing,ready,delivered,cancelled'],
+            'notes'              => ['nullable', 'string'],
+            'estimated_ready_at' => ['nullable', 'date'],
         ]);
 
         if ($validated['status'] === 'delivered' && !$laundryItem->delivered_at) {
